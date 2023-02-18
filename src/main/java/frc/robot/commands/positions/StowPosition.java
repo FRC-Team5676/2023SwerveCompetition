@@ -20,7 +20,7 @@ public class StowPosition extends CommandBase {
 
     @Override
     public void execute() {
-        _controlArm.setHeight(Constants.Position.StowPosition.ControlArmPosition);
+        _controlArm.setHeight(Constants.Position.StowPosition.ControlArmUpperPosition);
         _intake.setRotation(Constants.Position.StowPosition.IntakePosition);
     }
 

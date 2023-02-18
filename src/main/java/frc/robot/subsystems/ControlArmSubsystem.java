@@ -6,8 +6,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,83 +20,41 @@ public class ControlArmSubsystem extends SubsystemBase {
     private final double kMaxPercentOutput;
     private final double kRamp;
 
-    private final WPI_TalonFX mLeftElevatorMotor;
-    private final WPI_TalonFX mTopArm;
-    private final WPI_TalonFX[] motors;
+    private final CANSparkMax upperArmMotor;
+    private final DutyCycleEncoder lowerArmEncoder;
+    private final WPI_TalonSRX lowerArmMotor;
 
-    private final WPI_TalonSRX elevatorEncoder;
-
-    public double elevatorTargetHeight = Constants.ControlArmConstants.initialHeight;
+    public double upperArmTargetPosition = Constants.ControlArmConstants.kUpperArmTargetPosition;
+    public double lowerArmTargetPosition = Constants.ControlArmConstants.kLowerArmTargetPosition;
 
     public ControlArmSubsystem() {
         kMaxPercentOutput = Constants.ControlArmConstants.kMaxPercentOutput;
         kRamp = Constants.ControlArmConstants.kRamp;
 
-        elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kElevatorEncoderId);
-        configElevatorEncoder();
+        lowerArmEncoder = new DutyCycleEncoder(Constants.ControlArmConstants.kControlArmLowerEncoderDioPort);
+        configLowerArmEncoder();
 
-        mLeftElevatorMotor = new WPI_TalonFX(Constants.ControlArmConstants.kLeftElevatorMotorId);
-        mTopArm = new WPI_TalonFX(Constants.ControlArmConstants.kRightElevatorMotorId);
-        motors = new WPI_TalonFX[] {mLeftElevatorMotor, mTopArm};
+        lowerArmMotor = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerCanId);
+        upperArmMotor = new CANSparkMax(Constants.ControlArmConstants.kControArmUpperCanId, MotorType.kBrushless);
         configMotors();
     }
 
-    private void resetToAbsolute() {
-        double absolutePosition = (getCanCoder());
-        mTopArm.setSelectedSensorPosition(absolutePosition);
-    }
-
-    public double getCanCoder() {
-        return elevatorEncoder.getSelectedSensorPosition() * 5;
-    }
-
-    private void configElevatorEncoder() {
-        elevatorEncoder.configFactoryDefault();
-        elevatorEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-
-        // elevatorEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+    private void configLowerArmEncoder() {
+        // TODO: Figure out how to config
     }
 
     private void configMotors() {
-        mTopArm.configFactoryDefault();
-        mTopArm.setInverted(TalonFXInvertType.Clockwise);
-
-        mTopArm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-        mTopArm.setNeutralMode(NeutralMode.Brake);
-
-        mTopArm.configOpenloopRamp(kRamp);
-        mTopArm.configClosedloopRamp(kRamp);
-        mTopArm.configPeakOutputForward(kMaxPercentOutput);
-        mTopArm.configPeakOutputReverse(-kMaxPercentOutput);
-        mTopArm.configClosedLoopPeakOutput(0, kMaxPercentOutput);
-
-        resetToAbsolute();
-    }
-
-    public double getDistance() {
-        return convertTalonToMeters(getCanCoder());
-    }
-
-    public double convertTalonToMeters(double talon) {
-        return talon * 1.1 / 198000;
-    }
-
-    public void setHeight(int value) {
-        resetToAbsolute();
-        elevatorTargetHeight = value;
-        motors[1].set(ControlMode.Position, elevatorTargetHeight);
+        // TODO: Figure out how to config
     }
 
     public void drive(double pct) {
-        resetToAbsolute();
-        elevatorTargetHeight += pct * 1000;
-        elevatorTargetHeight =
+        upperArmTargetPosition += pct * 1000;
+        upperArmTargetPosition =
                 MathUtil.clamp(
-                        elevatorTargetHeight,
-                        Constants.ControlArmConstants.minimumHeight,
-                        Constants.ControlArmConstants.maximumHeight);
-        motors[1].set(ControlMode.Position, elevatorTargetHeight);
+                        upperArmTargetPosition,
+                        Constants.ControlArmConstants.kUpperArmTargetPosition * 0.95,
+                        Constants.ControlArmConstants.kUpperArmTargetPosition * 1.05);
+                        upperArmMotor.(ControlMode.Position, upperArmTargetPosition);
     }
 
     public void stop() {
@@ -102,11 +63,11 @@ public class ControlArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator Absolute Angle", elevatorEncoder.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Elevator Absolute Angle", lowerArmEncoder.getSelectedSensorPosition());
         SmartDashboard.putNumber("Elivator position1 ", motors[0].getSelectedSensorPosition());
         SmartDashboard.putNumber("Elivator position2 ", motors[1].getSelectedSensorPosition());
 
-        if (elevatorTargetHeight - motors[1].getSelectedSensorPosition() < 1000
+        if (upperArmTargetPosition - motors[1].getSelectedSensorPosition() < 1000
                 && motors[1].getSelectedSensorPosition() < 6000)
             motors[1].set(ControlMode.PercentOutput, 0);
 

@@ -43,41 +43,40 @@ public final class Constants {
 
     public static final class Position {
         public static final class StowPosition {
-            public static final int ControlArmPosition = 0;
+            public static final int ControlArmUpperPosition = 0;
+            public static final int ControlArmLowerPosition = 0;
             public static final int IntakePosition = 0;
         }
 
         public static final class Cones {
             public static final class HighNodePosition {
-                public static final int ControlArmPosition = 0;
+                public static final int ControlArmUpperPosition = 0;
+                public static final int ControlArmLowerPosition = 0;
                 public static final int IntakePosition = 0;
             };
         }
 
         public static final class Intake {
             public static final class IntakeFromGroundPosition {
-                public static final int ControlArmPosition = 0;
+                public static final int ControlArmUpperPosition = 0;
+                public static final int ControlArmLowerPosition = 0;
                 public static final int IntakePosition = 0;
             }
         }
     }
 
     public static final class ControlArmConstants {
-        public static final int kLeftElevatorMotorId = 20;
-        public static final int kRightElevatorMotorId = 21;
-        public static final int kElevatorEncoderId = 22;
+        public static final int kControArmUpperCanId = 20;
+        public static final int kControlArmLowerCanId = 21;
+        public static final int kControlArmLowerEncoderDioPort = 22;
 
+        // Motor
         public static final double kMaxPercentOutput = 1.0;
         public static final double kRamp = 0.3;
-        public static final double kWinchDiameter = 1.0;
-        // 9:1
-        public static final double kGearRatio = 1.0 / 9;
 
-        // Heights
-        public static final int initialHeight = 4000;
-        public static final int minimumHeight = 2000;
-        public static final int maximumHeight = 210000;
-        public static final double ElevatorOffset = 0.05;
+        // Positions
+        public static final double kUpperArmTargetPosition = 400;
+        public static final double kLowerArmTargetPosition = 200;
 
         // PID
         public static final double kP = 0.03;
@@ -87,13 +86,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int kLeftArmMotorId = 7;
-        public static final int kRightArmMotorId = 12;
-
-        // Heights
-        public static final int initialHeight = 0;
-        public static final int minimumHeight = 0;
-        public static final int maximumHeight = 70;
+        public static final int kIntakeCanId = 7;
 
         // PID
         public static final double kP = 0.003;
@@ -101,7 +94,6 @@ public final class Constants {
         public static final double kD = 0.00;
         public static final double kF = 0.00;
 
-        public static final double armLength = 0.54; // 0.54 m
         public static final double startingAngle = 0;
 
         public static final double rampRate = 0.6;
@@ -123,10 +115,10 @@ public final class Constants {
 
         // Chassis configuration
         // Distance between centers of right and left wheels on robot
-        public static final double kRobotWidth = Units.inchesToMeters(23.375);
+        public static final double kRobotWidth = Units.inchesToMeters(23.25);
 
         // Distance between front and back wheels on robot
-        public static final double kRobotLength = Units.inchesToMeters(19.375);
+        public static final double kRobotLength = Units.inchesToMeters(19.25);
 
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kRobotLength / 2, kRobotWidth / 2),
@@ -175,12 +167,13 @@ public final class Constants {
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-        public static final double kWheelDiameterMeters = 0.0762;
+        public static final double kWheelDiameterMeters = 0.09525; //0.0762;
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-        // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+
+        // 45 teeth on the wheel's bevel gear, 25 teeth on the first-stage spur gear, 15
         // teeth on the
         // bevel pinion
-        public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+        public static final double kDrivingMotorReduction = (45.0 * 25) / (kDrivingMotorPinionTeeth * 15);
         public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
                 / kDrivingMotorReduction;
 

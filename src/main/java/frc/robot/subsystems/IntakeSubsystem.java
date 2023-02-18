@@ -29,11 +29,11 @@ public class IntakeSubsystem extends SubsystemBase {
         kMaxPercentOutput = Constants.ControlArmConstants.kMaxPercentOutput;
         kRamp = Constants.ControlArmConstants.kRamp;
 
-        elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kElevatorEncoderId);
+        elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerEncoderDioPort);
         configElevatorEncoder();
 
-        mLeftElevatorMotor = new WPI_TalonFX(Constants.ControlArmConstants.kLeftElevatorMotorId);
-        mTopArm = new WPI_TalonFX(Constants.ControlArmConstants.kRightElevatorMotorId);
+        mLeftElevatorMotor = new WPI_TalonFX(Constants.ControlArmConstants.kControArmUpperCanId);
+        mTopArm = new WPI_TalonFX(Constants.ControlArmConstants.kControlArmLowerCanId);
         motors = new WPI_TalonFX[] {mLeftElevatorMotor, mTopArm};
         configMotors();
     }

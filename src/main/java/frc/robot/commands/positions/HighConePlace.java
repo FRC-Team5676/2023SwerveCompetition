@@ -20,7 +20,7 @@ public class HighConePlace extends CommandBase {
 
     @Override
     public void execute() {
-        _controlArm.setHeight(Constants.Position.Cones.HighNodePosition.ControlArmPosition);
+        _controlArm.setHeight(Constants.Position.Cones.HighNodePosition.ControlArmUpperPosition);
         _intake.setRotation(Constants.Position.Cones.HighNodePosition.IntakePosition);
     }
 
