@@ -1,5 +1,7 @@
 package frc.robot.commands.auto;
 
-public class PlaceCone {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class PlaceCone extends CommandBase {
     
 }

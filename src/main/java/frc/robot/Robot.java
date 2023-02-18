@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -32,16 +31,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    if (RobotBase.isReal())
-    
+    if (RobotBase.isReal()) {
       DataLogManager.start();
+    }
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-
   }
 
   /**
@@ -63,26 +60,19 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
+
     CommandScheduler.getInstance().run();
 
-    m_robotContainer.m_fieldSim.periodic();
-
-    m_robotContainer.periodic();
-
-    m_robotContainer.m_robotDrive.throttleValue = m_robotContainer.getThrottle();
-   
+    //m_robotContainer.m_fieldSim.periodic();
+    //m_robotContainer.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-String[] g = {"a","b","c"};
-SmartDashboard.putStringArray("g", g);
-  }
+  public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
   /**
    * This autonomous runs the autonomous command selected by your
@@ -90,9 +80,14 @@ SmartDashboard.putStringArray("g", g);
    */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    /*
+    * String autoSelected = SmartDashboard.getString("Auto Selector",
+    * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+    * = new MyAutoCommand(); break; case "Default Auto": default:
+    * autonomousCommand = new ExampleCommand(); break; }
+    */
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -102,8 +97,7 @@ SmartDashboard.putStringArray("g", g);
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -114,16 +108,11 @@ SmartDashboard.putStringArray("g", g);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    // new SetSwerveOdometry(m_robotContainer.m_robotDrive,
-    // m_robotContainer.m_fieldSim,new Pose2d(6.13, 5.23,
-    // Rotation2d.fromDegrees(-41.5))).schedule();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
@@ -135,11 +124,4 @@ SmartDashboard.putStringArray("g", g);
   @Override
   public void testPeriodic() {
   }
-
-  @Override
-  public void simulationPeriodic() {
-    m_robotContainer.m_fieldSim.periodic();
-    m_robotContainer.simulationPeriodic();
-  }
-
 }

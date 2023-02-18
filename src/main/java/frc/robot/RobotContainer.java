@@ -4,26 +4,21 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.DriveConstants.ModulePosition;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.auto.DriveForward;
-import frc.robot.commands.auto.FiveBallAuto;
-import frc.robot.commands.swerve.JogDriveModule;
-import frc.robot.commands.swerve.JogTurnModule;
-import frc.robot.commands.swerve.PositionTurnModule;
-import frc.robot.commands.swerve.ResetGyro;
-import frc.robot.commands.swerve.SetSwerveDrive;
-import frc.robot.commands.swerve.ToggleFieldOriented;
-import frc.robot.simulation.FieldSim;
+import frc.robot.commands.accessories.OperateControlArm;
+import frc.robot.commands.accessories.OperateIntake;
+import frc.robot.commands.auto.PathPlannerAuto;
+import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.subsystems.ControlArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.utils.AutonManager;
+import frc.robot.controllers.xbox;
+import frc.robot.controllers.joystick;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,120 +27,69 @@ import frc.robot.subsystems.DriveSubsystem;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  // Autonomous manager import
+  private final AutonManager autonManager = new AutonManager();
+
   // The robot's subsystems
-  final DriveSubsystem m_robotDrive = new DriveSubsystem();
-
-  public final FieldSim m_fieldSim = new FieldSim(m_robotDrive);
-
-  private final SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
+  private final DriveSubsystem swerve = new DriveSubsystem();
+  private final LimelightSubsystem Limelight = new LimelightSubsystem();
+  private final ControlArmSubsystem controlArm = new ControlArmSubsystem();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
 
   // The driver's controller
+  private final joystick driver = new joystick(0);
+  private final xbox operator = new xbox(1);
 
-  static Joystick leftJoystick = new Joystick(OIConstants.kDriverControllerPort);
-
-  static Joystick rightJoystick = new Joystick(OIConstants.kCoDriverControllerPort);
-
-  private XboxController m_coDriverController = new XboxController(OIConstants.kCoDriverControllerPort);
-
-  final GamepadButtons driver = new GamepadButtons(m_coDriverController, true);
+  public static boolean isAutoTargetOn = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Preferences.removeAll();
-    Pref.deleteUnused();
-    Pref.addMissing();
-    SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
+    addAutonomousChoices();
+    autonManager.displayChoices();
+
     // Configure the button bindings
-
-    m_fieldSim.initSim();
-    initializeAutoChooser();
-    // sc.showAll();
-     // Configure default commands
-   // m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        // new SetSwerveDrive(
-        // m_robotDrive,
-
-        // () -> -m_coDriverController.getRawAxis(1),
-        // () -> -m_coDriverController.getRawAxis(0),
-        // () -> -m_coDriverController.getRawAxis(4)));
-        m_robotDrive.setDefaultCommand(
-        new SetSwerveDrive(
-            m_robotDrive,
-            () -> leftJoystick.getRawAxis(1),
-            () -> leftJoystick.getRawAxis(0),
-            () -> leftJoystick.getRawAxis(2)));
-
-    driver.leftTrigger.whileHeld(new JogTurnModule(
-        m_robotDrive,
-        () -> -m_coDriverController.getRawAxis(1),
-        () -> m_coDriverController.getRawAxis(0),
-        () -> m_coDriverController.getRawAxis(2),
-        () -> m_coDriverController.getRawAxis(3)));
-
-    // individual modules
-    driver.leftBumper.whileHeld(new JogDriveModule(
-        m_robotDrive,
-        () -> -m_coDriverController.getRawAxis(1),
-        () -> m_coDriverController.getRawAxis(0),
-        () -> m_coDriverController.getRawAxis(2),
-        () -> m_coDriverController.getRawAxis(3),
-        true));
-
-    // all modules
-    driver.rightBumper.whileHeld(new JogDriveModule(
-        m_robotDrive,
-        () -> -m_coDriverController.getRawAxis(1),
-        () -> m_coDriverController.getRawAxis(0),
-        () -> m_coDriverController.getRawAxis(2),
-        () -> m_coDriverController.getRawAxis(3),
-        false));
-
-
-        JoystickButton button_8 = new JoystickButton(leftJoystick,8);
-        JoystickButton button_7 = new JoystickButton(leftJoystick, 7);
-        button_8.whenPressed(new ToggleFieldOriented(m_robotDrive));
-        button_7.whenPressed(new ResetGyro(m_robotDrive));
-    // position turn modules individually
-    // driver.X_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.FRONT_LEFT));
-    // driver.A_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.FRONT_RIGHT));
-    // driver.B_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.BACK_LEFT));
-    // driver.Y_button.whenPressed(new PositionTurnModule(m_robotDrive,
-    // ModulePosition.BACK_RIGHT));
-
+    configureButtonBindings();
   }
 
-  private void initializeAutoChooser() {
-    m_autoChooser.setDefaultOption("Do Nothing", new WaitCommand(0));
-    m_autoChooser.addOption("Drive Forward", new DriveForward(m_robotDrive));
-    m_autoChooser.addOption("5 Ball Auto", new FiveBallAuto(m_robotDrive));
-
-    SmartDashboard.putData("Auto Selector", m_autoChooser);
-
+  private void addAutonomousChoices() {
+    autonManager.addOption("Do Nothing", new InstantCommand());
+    autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve, controlArm, intake));
   }
 
-  public void simulationPeriodic() {
-    m_fieldSim.periodic();
-    periodic();
+  /**
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
+   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+   * subclasses ({@link edu.wpi.first.wpilibj.Joystick} or
+   * {@link XboxController}), and then calling
+   * passing it to a {@link JoystickButton}.
+   */
+  private void configureButtonBindings() {
+    // The left stick controls translation of the robot.
+    // Turning is controlled by the X axis of the right stick.
+
+    final int translationAxis = XboxController.Axis.kLeftY.value;
+    final int strafeAxis = XboxController.Axis.kLeftX.value;
+    final int rotationAxis = XboxController.Axis.kRightX.value;
+
+    swerve.setDefaultCommand(
+        new TeleopSwerve(swerve, driver, translationAxis, strafeAxis, rotationAxis));
+
+    driver.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
+    driver.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
+
+    controlArm.setDefaultCommand(new OperateControlArm(operator, controlArm));
+    intake.setDefaultCommand(new OperateIntake(operator, intake));
   }
 
-  public void periodic() {
-    m_fieldSim.periodic();
-  }
-
-  public double getThrottle() {
-    return -leftJoystick.getThrottle();
-  }
-
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoChooser.getSelected();
+    return autonManager.getSelected();
   }
-
 }
