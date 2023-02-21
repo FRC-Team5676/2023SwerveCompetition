@@ -123,10 +123,10 @@ public final class Constants {
 
         // Chassis configuration
         // Distance between centers of right and left wheels on robot
-        public static final double kRobotWidth = Units.inchesToMeters(23.375);
+        public static final double kRobotWidth = Units.inchesToMeters(23.25);
 
         // Distance between front and back wheels on robot
-        public static final double kRobotLength = Units.inchesToMeters(19.375);
+        public static final double kRobotLength = Units.inchesToMeters(19.25);
 
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kRobotLength / 2, kRobotWidth / 2),
@@ -134,28 +134,28 @@ public final class Constants {
                 new Translation2d(-kRobotLength / 2, kRobotWidth / 2),
                 new Translation2d(-kRobotLength / 2, -kRobotWidth / 2));
 
-        public static final double kFrontLeftAngularOffset = Math.toRadians(206.5);
-        public static final double kFrontRightAngularOffset = Math.toRadians(312.1);
-        public static final double kBackLeftAngularOffset = Math.toRadians(168.3);
-        public static final double kBackRightAngularOffset = Math.toRadians(126.6);
+        public static final double kFrontLeftAngularOffset = Math.toRadians(0); //206.5
+        public static final double kFrontRightAngularOffset = Math.toRadians(0);//312.1
+        public static final double kBackLeftAngularOffset = Math.toRadians(0);  //168.3
+        public static final double kBackRightAngularOffset = Math.toRadians(0); //126.6
 
         // Spark MAX Drive Motor CAN IDs
-        public static final int kFrontLeftDriveMotorCanId = 22;
-        public static final int kFrontRightDriveMotorCanId = 23;
-        public static final int kBackLeftDriveMotorCanId = 27;
-        public static final int kBackRightDriveMotorCanId = 26;
+        public static final int kFrontLeftDriveMotorCanId = 23;
+        public static final int kFrontRightDriveMotorCanId = 22;
+        public static final int kBackLeftDriveMotorCanId = 26;
+        public static final int kBackRightDriveMotorCanId = 27;
 
         // Spark MAX Steer Motor CAN IDs
-        public static final int kFrontLeftTurnMotorCanId = 20;
-        public static final int kFrontRightTurnMotorCanId = 21;
-        public static final int kBackLeftTurnMotorCanId = 25;
-        public static final int kBackRightTurnMotorCanId = 24;
+        public static final int kFrontLeftTurnMotorCanId = 21;
+        public static final int kFrontRightTurnMotorCanId = 20;
+        public static final int kBackLeftTurnMotorCanId = 24;
+        public static final int kBackRightTurnMotorCanId = 25;
 
         // Spark MAX Steer Encoder CAN IDs
-        public static final int kFrontLeftTurnEncoderCanId = 51;
-        public static final int kFrontRightTurnEncoderCanId = 50;
-        public static final int kBackLeftTurnEncoderCanId = 52;
-        public static final int kBackRightTurnEncoderCanId = 53;
+        public static final int kFrontLeftTurnEncoderCanId = 50;
+        public static final int kFrontRightTurnEncoderCanId = 51;
+        public static final int kBackLeftTurnEncoderCanId = 53;
+        public static final int kBackRightTurnEncoderCanId = 52;
 
         public static final boolean kGyroReversed = true;
     }
