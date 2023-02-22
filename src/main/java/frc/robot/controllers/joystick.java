@@ -27,7 +27,7 @@ public class joystick {
 
     /** The Y (up/down) position of the right joystick on the controller from -1.0 to 1.0 */
     public double getStickZ() {
-        return deadzone(controller.getZ(), kDeadzoneStick);
+        return deadzone(controller.getZ(), kDeadzoneStick * 2);
     }
 
     private double deadzone(double x, double dz) {

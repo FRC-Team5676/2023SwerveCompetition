@@ -37,9 +37,9 @@ public class TeleopSwerve extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double throttle = -m_throttleInput.getAsDouble();
+        double throttle = m_throttleInput.getAsDouble();
         double strafe = m_strafeInput.getAsDouble();
-        double rotation = -m_rotationInput.getAsDouble();
+        double rotation = m_rotationInput.getAsDouble();
 
         // square values while keeping original sign
         throttle = Math.signum(throttle) * Math.pow(throttle, 2);

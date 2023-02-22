@@ -25,7 +25,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final class CustomConstants {
         public static final double rampRate = 2;
-        public static final double stickDeadband = 0.05;
+        public static final double stickDeadband = 0.1;
 
         public static final double lowSpeedMultiplier = 0.2;
 
@@ -140,7 +140,7 @@ public final class Constants {
 
         public static final double kFrontLeftAngularOffset = 44.39;
         public static final double kFrontRightAngularOffset = 112.76;
-        public static final double kBackLeftAngularOffset = 38.49;
+        public static final double kBackLeftAngularOffset = 123.22;
         public static final double kBackRightAngularOffset = 257.78;
 
         // Spark MAX Drive Motor CAN IDs

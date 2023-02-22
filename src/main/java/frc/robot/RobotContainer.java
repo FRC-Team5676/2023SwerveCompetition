@@ -32,8 +32,8 @@ public class RobotContainer {
   // private final IntakeSubsystem intake = new IntakeSubsystem();
 
   // The driver's controller
-  private final joystick driver = new joystick(0);
-  private final xbox operator = new xbox(1);
+  private final joystick driver = new joystick(1);
+  private final xbox operator = new xbox(0);
 
   public static boolean isAutoTargetOn = false;
 
