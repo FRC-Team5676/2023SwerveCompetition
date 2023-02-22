@@ -18,11 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.modules.SwerveModule;
 import frc.robot.utils.Enums.ModulePosition;
 
 public class DriveSubsystem extends SubsystemBase {
     // Create MAXSwerveModules
-    private final SwerveModuleSparkMax m_frontLeft = new SwerveModuleSparkMax(
+    private final SwerveModule m_frontLeft = new SwerveModule(
             ModulePosition.FRONT_LEFT,
             DriveConstants.kFrontLeftDriveMotorCanId,
             DriveConstants.kFrontLeftTurnMotorCanId,
@@ -31,7 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kFrontLeftTurningMotorReversed,
             DriveConstants.kFrontLeftAngularOffset);
 
-    private final SwerveModuleSparkMax m_frontRight = new SwerveModuleSparkMax(
+    private final SwerveModule m_frontRight = new SwerveModule(
             ModulePosition.FRONT_RIGHT,
             DriveConstants.kFrontRightDriveMotorCanId,
             DriveConstants.kFrontRightTurnMotorCanId,
@@ -40,7 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kFrontRightTurningMotorReversed,
             DriveConstants.kFrontRightAngularOffset);
 
-    private final SwerveModuleSparkMax _backLeft = new SwerveModuleSparkMax(
+    private final SwerveModule _backLeft = new SwerveModule(
             ModulePosition.BACK_LEFT,
             DriveConstants.kBackLeftDriveMotorCanId,
             DriveConstants.kBackLeftTurnMotorCanId,
@@ -49,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kBackLeftTurningMotorReversed,
             DriveConstants.kBackLeftAngularOffset);
 
-    private final SwerveModuleSparkMax _backRight = new SwerveModuleSparkMax(
+    private final SwerveModule _backRight = new SwerveModule(
             ModulePosition.BACK_RIGHT,
             DriveConstants.kBackRightDriveMotorCanId,
             DriveConstants.kBackRightTurnMotorCanId,

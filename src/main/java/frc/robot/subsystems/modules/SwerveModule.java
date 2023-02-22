@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.modules;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -32,7 +32,7 @@ import frc.robot.Pref;
 import frc.robot.utils.AngleUtils;
 import frc.robot.utils.ShuffleboardContent;
 
-public class SwerveModuleSparkMax extends SubsystemBase {
+public class SwerveModule extends SubsystemBase {
   public final CANSparkMax m_driveMotor;
   public final CANSparkMax m_turningMotor;
   public final RelativeEncoder m_driveEncoder;
@@ -78,7 +78,7 @@ public class SwerveModuleSparkMax extends SubsystemBase {
    * @param turningEncoderReversed  Whether the turning encoder is reversed.
    * @param turningEncoderOffset
    */
-  public SwerveModuleSparkMax(
+  public SwerveModule(
       ModulePosition modulePosition,
       int driveMotorCanChannel,
       int turningMotorCanChannel,

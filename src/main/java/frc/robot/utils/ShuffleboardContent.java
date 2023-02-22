@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.Enums.ModulePosition;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.SwerveModuleSparkMax;
+import frc.robot.subsystems.modules.SwerveModule;
 
 /** Add your docs here. */
 public class ShuffleboardContent {
@@ -29,7 +29,7 @@ public class ShuffleboardContent {
 
         }
 
-        public static void initBooleanShuffleboard(SwerveModuleSparkMax m_sm) {
+        public static void initBooleanShuffleboard(SwerveModule m_sm) {
 
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
@@ -44,7 +44,7 @@ public class ShuffleboardContent {
 
         }
 
-        public static void initDriveShuffleboard(SwerveModuleSparkMax m_sm) {
+        public static void initDriveShuffleboard(SwerveModule m_sm) {
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.modAbrev[m_moduleNumber];
@@ -68,7 +68,7 @@ public class ShuffleboardContent {
 
         }
 
-        public static void initTurnShuffleboard(SwerveModuleSparkMax m_sm) {
+        public static void initTurnShuffleboard(SwerveModule m_sm) {
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.modAbrev[m_moduleNumber];
@@ -100,7 +100,7 @@ public class ShuffleboardContent {
 
         }
 
-        public static void initCoderBooleanShuffleboard(SwerveModuleSparkMax m_sm) {
+        public static void initCoderBooleanShuffleboard(SwerveModule m_sm) {
 
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
@@ -116,7 +116,7 @@ public class ShuffleboardContent {
 
         }
 
-        public static void initCANCoderShuffleboard(SwerveModuleSparkMax m_sm) {
+        public static void initCANCoderShuffleboard(SwerveModule m_sm) {
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.modAbrev[m_moduleNumber];

@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.modules;
 
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.SparkMaxPIDController;
@@ -10,17 +10,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
-public class UpperArmModule extends SubsystemBase {
+public class LowerArmModule extends SubsystemBase {
 
     public final AbsoluteEncoder m_driveEncoder;
-
-    private final CANSparkMax m_driveMotor;
+    public final CANSparkMax m_driveMotor;
+    
     private final SparkMaxPIDController m_driveVelController;
     private final int VEL_SLOT = 1;
 
-    public UpperArmModule(
-            int driveMotorCanChannel,
-            boolean driveMotorReversed) {
+    public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
         // Drive Motor setup
         m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
         m_driveMotor.restoreFactoryDefaults();
@@ -59,5 +57,4 @@ public class UpperArmModule extends SubsystemBase {
           m_driveMotor.setIdleMode(IdleMode.kCoast);
         }
       }
-    
 }
