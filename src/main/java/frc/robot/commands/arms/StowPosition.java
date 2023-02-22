@@ -7,21 +7,22 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class StowPosition extends CommandBase {
 
-    private final ControlArmSubsystem _controlArm;
-    private final IntakeSubsystem _intake;
+    private final ControlArmSubsystem m_controlArm;
+    private final IntakeSubsystem m_intake;
     
     public StowPosition(
         ControlArmSubsystem controlArm,
         IntakeSubsystem intake) {
         addRequirements(controlArm, intake);
-        _controlArm = controlArm;
-        _intake = intake;
+        m_controlArm = controlArm;
+        m_intake = intake;
     }
 
     @Override
     public void execute() {
-        //_controlArm.setHeight(Constants.Position.StowPosition.ControlArmUpperPosition);
-        _intake.setRotation(Constants.Position.StowPosition.IntakePosition);
+        m_intake.setRotation(Constants.Position.StowPosition.IntakePosition);
+        m_controlArm.stopLowerArm();
+        m_controlArm.stopUpperArm();
     }
 
     @Override
