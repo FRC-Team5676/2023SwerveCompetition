@@ -102,11 +102,11 @@ public class ShuffleboardContent {
                 String abrev = m_sm.modAbrev[m_moduleNumber];
                 ShuffleboardTab x = Shuffleboard.getTab("CanCoders");
 
-                x.addBoolean("CANOK" + abrev, () -> m_sm.turnCoderConnected)
+                x.addBoolean("CANCoder Connected" + abrev, () -> m_sm.turnCoderConnected)
                                 .withPosition(8, m_moduleNumber);
                 CANCoderFaults faults = new CANCoderFaults();
                 m_sm.m_turnCANcoder.getFaults(faults);
-                x.addBoolean("Fault" + abrev, () -> faults.hasAnyFault())
+                x.addBoolean("CANCoder Faults" + abrev, () -> !faults.hasAnyFault())
                                 .withPosition(9, m_moduleNumber);
 
         }

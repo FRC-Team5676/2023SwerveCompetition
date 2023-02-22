@@ -1,9 +1,9 @@
 package frc.robot.subsystems.modules;
 
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,7 +12,7 @@ import frc.robot.Constants.ModuleConstants;
 
 public class UpperArmModule extends SubsystemBase {
 
-    public final AbsoluteEncoder m_driveEncoder;
+    public final RelativeEncoder m_driveEncoder;
     public final CANSparkMax m_driveMotor;
     
     private final SparkMaxPIDController m_driveVelController;
@@ -31,7 +31,7 @@ public class UpperArmModule extends SubsystemBase {
         m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
         // drive encoder setup
-        m_driveEncoder = m_driveMotor.getAbsoluteEncoder(null);
+        m_driveEncoder = m_driveMotor.getEncoder();
         m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
         m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
