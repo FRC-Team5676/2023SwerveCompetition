@@ -1,99 +1,64 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-    
-    private final WPI_TalonSRX mLeftElevatorMotor;
-    private final WPI_TalonSRX mTopArm;
-    private final WPI_TalonSRX[] motors;
 
-    private final WPI_TalonSRX elevatorEncoder;
+    public final AbsoluteEncoder m_driveEncoder;
+    public final CANSparkMax m_driveMotor;
 
-    public double elevatorTargetHeight = 0; //Constants.ControlArmConstants.initialHeight;
+    private final SparkMaxPIDController m_driveVelController;
+    private final int VEL_SLOT = 1;
 
-    public IntakeSubsystem() {
-        elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerEncoderDioPort);
-        configElevatorEncoder();
+    public IntakeSubsystem(int driveMotorCanChannel, boolean driveMotorReversed) {
+        // Drive Motor setup
+        m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
+        m_driveMotor.restoreFactoryDefaults();
+        m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+        m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
+        m_driveMotor.setInverted(driveMotorReversed);
+        m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
+        m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+        m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        mLeftElevatorMotor = new WPI_TalonSRX(Constants.ControlArmConstants.kControArmUpperCanId);
-        mTopArm = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerCanId);
-        motors = new WPI_TalonSRX[] {mLeftElevatorMotor, mTopArm};
-        configMotors();
+        // drive encoder setup
+        m_driveEncoder = m_driveMotor.getAbsoluteEncoder(null);
+        m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
+        m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
+
+        m_driveVelController = m_driveMotor.getPIDController();
+        m_driveVelController.setP(.01, VEL_SLOT);
+        m_driveVelController.setD(0, VEL_SLOT);
+        m_driveVelController.setI(0, VEL_SLOT);
+        m_driveVelController.setIZone(1, VEL_SLOT);
     }
 
-    private void resetToAbsolute() {
-        double absolutePosition = (getCanCoder());
-        mTopArm.setSelectedSensorPosition(absolutePosition);
+    public double getPosition() {
+        return m_driveEncoder.getPosition();
     }
 
-    public double getCanCoder() {
-        return elevatorEncoder.getSelectedSensorPosition() * 5;
+    public static double limitMotorCmd(double motorCmdIn) {
+        return Math.max(Math.min(motorCmdIn, 1.0), -1.0);
     }
 
-    private void configElevatorEncoder() {
-        elevatorEncoder.configFactoryDefault();
-        elevatorEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-
-        // elevatorEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+    public void setDriveBrakeMode(boolean on) {
+        if (on) {
+            m_driveMotor.setIdleMode(IdleMode.kBrake);
+        } else {
+            m_driveMotor.setIdleMode(IdleMode.kCoast);
+        }
     }
 
-    private void configMotors() {
-
-    }
-
-    public double getDistance() {
-        return convertTalonToMeters(getCanCoder());
-    }
-
-    public double convertTalonToMeters(double talon) {
-        return talon * 1.1 / 198000;
-    }
-
-    public void setRotation(int value) {
-        resetToAbsolute();
-        elevatorTargetHeight = value;
-        motors[1].set(ControlMode.Position, elevatorTargetHeight);
-    }
-
-    public void drive(double pct) {
-        resetToAbsolute();
-        elevatorTargetHeight += pct * 1000;
-        elevatorTargetHeight =
-                MathUtil.clamp(
-                        elevatorTargetHeight,
-                        0, //Constants.ControlArmConstants.minimumHeight,
-                        0); //Constants.ControlArmConstants.maximumHeight);
-        motors[1].set(ControlMode.Position, elevatorTargetHeight);
-    }
-
-    public void stop() {
-        motors[1].set(ControlMode.PercentOutput, 0.0);
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Elevator Absolute Angle", elevatorEncoder.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Elivator position1 ", motors[0].getSelectedSensorPosition());
-        SmartDashboard.putNumber("Elivator position2 ", motors[1].getSelectedSensorPosition());
-
-        if (elevatorTargetHeight - motors[1].getSelectedSensorPosition() < 1000
-                && motors[1].getSelectedSensorPosition() < 6000)
-            motors[1].set(ControlMode.PercentOutput, 0);
-
-        // for (WPI_TalonFX motor : motors){
-        mTopArm.config_kP(0, Constants.ControlArmConstants.kP);
-        mTopArm.config_kI(0, Constants.ControlArmConstants.kI);
-        mTopArm.config_kD(0, Constants.ControlArmConstants.kD);
-        mTopArm.config_kF(0, Constants.ControlArmConstants.kF);
-        // }
+    public void rotateIntake(double rotate) {
 
     }
 }
