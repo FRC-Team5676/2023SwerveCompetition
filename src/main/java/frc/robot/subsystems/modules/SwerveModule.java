@@ -13,8 +13,6 @@ import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -65,8 +63,7 @@ public class SwerveModule extends SubsystemBase {
   public boolean turnCoderConnected;
   private boolean useRRPid = true;
   private double turnDeadband = .5;
-  private Pose2d m_pose;
-
+  
   /**
    * Constructs a SwerveModule.
    *
@@ -300,10 +297,6 @@ public class SwerveModule extends SubsystemBase {
 
   public Rotation2d getHeadingRotation2d() {
     return Rotation2d.fromDegrees(getHeadingDegrees());
-  }
-
-  public void setModulePose(Pose2d pose) {
-    m_pose = pose;
   }
 
   public void setDriveBrakeMode(boolean on) {

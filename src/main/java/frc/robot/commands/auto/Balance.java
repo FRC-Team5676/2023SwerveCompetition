@@ -1,7 +1,6 @@
 /** Thank you GOFIRST-Robotics! */
 package frc.robot.commands.auto;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -10,7 +9,6 @@ public class Balance extends CommandBase {
 
     private final DriveSubsystem _swerve;
 
-    private Translation2d _translation;
     private double _rotation;
 
     private double _error;
@@ -49,7 +47,6 @@ public class Balance extends CommandBase {
             _drivePower = Math.copySign(0.4, _drivePower);
         }
 
-        _translation = new Translation2d(_drivePower, 0);
         _swerve.drive(_drivePower, 0, _rotation, true);
 
         // Debugging Print Statments
