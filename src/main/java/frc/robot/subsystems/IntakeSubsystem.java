@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.MathUtil;
@@ -17,9 +15,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private final double kMaxPercentOutput;
     private final double kRamp;
 
-    private final WPI_TalonFX mLeftElevatorMotor;
-    private final WPI_TalonFX mTopArm;
-    private final WPI_TalonFX[] motors;
+    private final WPI_TalonSRX mLeftElevatorMotor;
+    private final WPI_TalonSRX mTopArm;
+    private final WPI_TalonSRX[] motors;
 
     private final WPI_TalonSRX elevatorEncoder;
 
@@ -55,20 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private void configMotors() {
-        mTopArm.configFactoryDefault();
-        mTopArm.setInverted(TalonFXInvertType.Clockwise);
 
-        mTopArm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-        mTopArm.setNeutralMode(NeutralMode.Brake);
-
-        mTopArm.configOpenloopRamp(kRamp);
-        mTopArm.configClosedloopRamp(kRamp);
-        mTopArm.configPeakOutputForward(kMaxPercentOutput);
-        mTopArm.configPeakOutputReverse(-kMaxPercentOutput);
-        mTopArm.configClosedLoopPeakOutput(0, kMaxPercentOutput);
-
-        resetToAbsolute();
     }
 
     public double getDistance() {

@@ -8,55 +8,34 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.controllers.joystick;
 
-
 public class TeleopSwerve extends CommandBase {
 
     private double rotation;
     private Translation2d translation;
-    private boolean fieldRelative;
-    private DriveSubsystem s_Swerve;
-    private joystick driver;
-
-    private SlewRateLimiter xLimiter = new SlewRateLimiter(Constants.CustomConstants.rampRate);
-    private SlewRateLimiter yLimiter = new SlewRateLimiter(Constants.CustomConstants.rampRate);
-
-    private double applyDeadband(double axisValue, double deadbandValue) {
-        return (Math.abs(axisValue) < deadbandValue ? 0 : axisValue);
-    }
+    private boolean _fieldRelative;
+    private DriveSubsystem _swerve;
+    private joystick _driver;
 
     /** Driver control */
-    public TeleopSwerve(
-        DriveSubsystem s_Swerve, joystick driver, int translationAxis, int strafeAxis, int rotationAxis) {
-        this.s_Swerve = s_Swerve;
-        addRequirements(s_Swerve);
+    public TeleopSwerve(DriveSubsystem swerve, joystick driver) {
+        _swerve = swerve;
+        addRequirements(_swerve);
 
-        this.driver = driver;
-        this.fieldRelative = Constants.CustomConstants.fieldRelative;
+        _driver = driver;
+        _fieldRelative = Constants.CustomConstants.fieldRelative;
     }
 
     @Override
     public void execute() {
-        if (RobotContainer.isAutoTargetOn) return;
+        if (RobotContainer.isAutoTargetOn)
+            return;
 
-        double yAxis = driver.getLeftStickY();
-        double xAxis = -driver.getLeftStickX();
-        double rAxis = -driver.getRightStickX();
+        double yAxis = _driver.getLeftStickY();
+        double xAxis = _driver.getLeftStickX();
+        double rAxis = _driver.getRightStickX();
 
-        yAxis = applyDeadband(yAxis, Constants.CustomConstants.stickDeadband);
-        xAxis = applyDeadband(xAxis, Constants.CustomConstants.stickDeadband);
-        rAxis = applyDeadband(rAxis, Constants.CustomConstants.stickDeadband);
-
-        // Reduces speed if low speed mode is activated
-        if (!s_Swerve.swerveHighSpeedMode) {
-            yAxis *= Constants.CustomConstants.lowSpeedMultiplier;
-            xAxis *= Constants.CustomConstants.lowSpeedMultiplier;
-            rAxis *= Constants.CustomConstants.lowSpeedMultiplier;
-        }
-
-        translation =
-                new Translation2d(yLimiter.calculate(yAxis), xLimiter.calculate(xAxis))
-                        .times(Constants.DriveConstants.kMaxSpeedMetersPerSecond);
+        translation = new Translation2d(yAxis, xAxis).times(Constants.DriveConstants.kMaxSpeedMetersPerSecond);
         rotation = rAxis * Constants.DriveConstants.kMaxAngularSpeed;
-        s_Swerve.drive(translation, rotation, fieldRelative);
+        _swerve.drive(translation, rotation, _fieldRelative);
     }
 }

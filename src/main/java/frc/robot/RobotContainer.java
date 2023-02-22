@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.accessories.OperateControlArm;
-import frc.robot.commands.accessories.OperateIntake;
-import frc.robot.commands.auto.PathPlannerAuto;
+//import frc.robot.commands.accessories.OperateControlArm;
+//import frc.robot.commands.accessories.OperateIntake;
+//import frc.robot.commands.auto.PathPlannerAuto;
 import frc.robot.commands.swerve.TeleopSwerve;
-import frc.robot.subsystems.ControlArmSubsystem;
+//import frc.robot.subsystems.ControlArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
+//import frc.robot.subsystems.IntakeSubsystem;
+//import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.utils.AutonManager;
 import frc.robot.controllers.xbox;
 import frc.robot.controllers.joystick;
@@ -32,9 +32,9 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final DriveSubsystem swerve = new DriveSubsystem();
-  private final LimelightSubsystem Limelight = new LimelightSubsystem();
-  private final ControlArmSubsystem controlArm = new ControlArmSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
+  //private final LimelightSubsystem Limelight = new LimelightSubsystem();
+  //private final ControlArmSubsystem controlArm = new ControlArmSubsystem();
+  //private final IntakeSubsystem intake = new IntakeSubsystem();
 
   // The driver's controller
   private final joystick driver = new joystick(0);
@@ -55,7 +55,7 @@ public class RobotContainer {
 
   private void addAutonomousChoices() {
     autonManager.addOption("Do Nothing", new InstantCommand());
-    autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve, controlArm, intake));
+    //autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve, controlArm, intake));
   }
 
   /**
@@ -70,18 +70,14 @@ public class RobotContainer {
     // The left stick controls translation of the robot.
     // Turning is controlled by the X axis of the right stick.
 
-    final int translationAxis = XboxController.Axis.kLeftY.value;
-    final int strafeAxis = XboxController.Axis.kLeftX.value;
-    final int rotationAxis = XboxController.Axis.kRightX.value;
-
     swerve.setDefaultCommand(
-        new TeleopSwerve(swerve, driver, translationAxis, strafeAxis, rotationAxis));
+        new TeleopSwerve(swerve, driver));
 
     driver.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
     driver.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
 
-    controlArm.setDefaultCommand(new OperateControlArm(operator, controlArm));
-    intake.setDefaultCommand(new OperateIntake(operator, intake));
+    //controlArm.setDefaultCommand(new OperateControlArm(operator, controlArm));
+    //intake.setDefaultCommand(new OperateIntake(operator, intake));
   }
 
   /**

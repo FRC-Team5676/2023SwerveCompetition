@@ -25,7 +25,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final class CustomConstants {
         public static final double rampRate = 2;
-        public static final double stickDeadband = 0.1;
+        public static final double stickDeadband = 0.05;
 
         public static final double lowSpeedMultiplier = 0.2;
 
@@ -126,28 +126,28 @@ public final class Constants {
                 new Translation2d(-kRobotLength / 2, kRobotWidth / 2),
                 new Translation2d(-kRobotLength / 2, -kRobotWidth / 2));
 
-        public static final double kFrontLeftAngularOffset = Math.toRadians(206.5);
-        public static final double kFrontRightAngularOffset = Math.toRadians(312.1);
-        public static final double kBackLeftAngularOffset = Math.toRadians(168.3);
-        public static final double kBackRightAngularOffset = Math.toRadians(126.6);
+        public static final double kFrontLeftAngularOffset = Math.toRadians(0); //206.5
+        public static final double kFrontRightAngularOffset = Math.toRadians(0);//312.1
+        public static final double kBackLeftAngularOffset = Math.toRadians(0);  //168.3
+        public static final double kBackRightAngularOffset = Math.toRadians(0); //126.6
 
         // Spark MAX Drive Motor CAN IDs
-        public static final int kFrontLeftDriveMotorCanId = 22;
-        public static final int kFrontRightDriveMotorCanId = 23;
-        public static final int kBackLeftDriveMotorCanId = 27;
-        public static final int kBackRightDriveMotorCanId = 26;
+        public static final int kFrontLeftDriveMotorCanId = 23;
+        public static final int kFrontRightDriveMotorCanId = 22;
+        public static final int kBackLeftDriveMotorCanId = 26;
+        public static final int kBackRightDriveMotorCanId = 27;
 
         // Spark MAX Steer Motor CAN IDs
-        public static final int kFrontLeftTurnMotorCanId = 20;
-        public static final int kFrontRightTurnMotorCanId = 21;
-        public static final int kBackLeftTurnMotorCanId = 25;
-        public static final int kBackRightTurnMotorCanId = 24;
+        public static final int kFrontLeftTurnMotorCanId = 21;
+        public static final int kFrontRightTurnMotorCanId = 20;
+        public static final int kBackLeftTurnMotorCanId = 24;
+        public static final int kBackRightTurnMotorCanId = 25;
 
         // Spark MAX Steer Encoder CAN IDs
-        public static final int kFrontLeftTurnEncoderCanId = 51;
-        public static final int kFrontRightTurnEncoderCanId = 50;
-        public static final int kBackLeftTurnEncoderCanId = 52;
-        public static final int kBackRightTurnEncoderCanId = 53;
+        public static final int kFrontLeftTurnEncoderCanId = 50;
+        public static final int kFrontRightTurnEncoderCanId = 51;
+        public static final int kBackLeftTurnEncoderCanId = 53;
+        public static final int kBackRightTurnEncoderCanId = 52;
 
         public static final boolean kGyroReversed = true;
     }
@@ -190,23 +190,23 @@ public final class Constants {
 
         public static final double kDrivingP = 0.04;
         public static final double kDrivingI = 0;
-        public static final double kDrivingD = 0;
+        public static final double kDrivingD = 1;
         public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
         public static final double kDrivingMinOutput = -1;
         public static final double kDrivingMaxOutput = 1;
 
-        public static final double kTurningP = 0.4;
+        public static final double kTurningP = 0.04;
         public static final double kTurningI = 0;
-        public static final double kTurningD = 0;
-        public static final double kTurningFF = 0;
+        public static final double kTurningD = 1;
+        public static final double kTurningFF = 1;
         public static final double kTurningMinOutput = -1;
         public static final double kTurningMaxOutput = 1;
 
-        public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
-        public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
+        public static final IdleMode kDrivingMotorIdleMode = IdleMode.kCoast;
+        public static final IdleMode kTurningMotorIdleMode = IdleMode.kCoast;
 
-        public static final int kDrivingMotorCurrentLimit = 50; // amps
-        public static final int kTurningMotorCurrentLimit = 20; // amps
+        public static final int kDrivingMotorCurrentLimit = 35; // amps
+        public static final int kTurningMotorCurrentLimit = 35; // amps
     }
 
     public static final class OIConstants {
