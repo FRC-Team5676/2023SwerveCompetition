@@ -45,7 +45,8 @@ public class PathPlannerAuto extends SequentialCommandGroup {
         eventMap.put("event", new StowPosition(s_elevatorSubsystem, s_arArmSubsystem));
         eventMap.put("stopEvent", new Balance(s_Swerve));
 
-        PPSwerveControllerCommand swerveControllerCommand =
+        PPSwerveControllerCommand swerveControllerCommand = null;
+        /*
                 new PPSwerveControllerCommand(
                         trajectory,
                         s_Swerve::getPose,
@@ -55,6 +56,7 @@ public class PathPlannerAuto extends SequentialCommandGroup {
                         thetaController,
                         s_Swerve::setModuleStates,
                         s_Swerve);
+        */
 
         FollowPathWithEvents command =
                 new FollowPathWithEvents(swerveControllerCommand, trajectory.getMarkers(), eventMap);

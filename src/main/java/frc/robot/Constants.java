@@ -108,10 +108,22 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
+        public static final boolean kFrontLeftTurningMotorReversed = true;
+        public static final boolean kBackLeftTurningMotorReversed = true;
+        public static final boolean kFrontRightTurningMotorReversed = true;
+        public static final boolean kBackRightTurningMotorReversed = true;
+
+        public static final boolean kFrontLeftDriveMotorReversed = true;
+        public static final boolean kBackLeftDriveMotorReversed = true;
+        public static final boolean kFrontRightDriveMotorReversed = true;
+        public static final boolean kBackRightDriveMotorReversed = true;
+
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
         public static final double kMaxSpeedMetersPerSecond = 4.8;
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+        public static final double kMaxRotationRadiansPerSecond = Math.PI;
+        // public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per
+        // second
 
         // Chassis configuration
         // Distance between centers of right and left wheels on robot
@@ -126,10 +138,10 @@ public final class Constants {
                 new Translation2d(-kRobotLength / 2, kRobotWidth / 2),
                 new Translation2d(-kRobotLength / 2, -kRobotWidth / 2));
 
-        public static final double kFrontLeftAngularOffset = Math.toRadians(0); //206.5
-        public static final double kFrontRightAngularOffset = Math.toRadians(0);//312.1
-        public static final double kBackLeftAngularOffset = Math.toRadians(0);  //168.3
-        public static final double kBackRightAngularOffset = Math.toRadians(0); //126.6
+        public static final double kFrontLeftAngularOffset = Math.toRadians(0); // 206.5
+        public static final double kFrontRightAngularOffset = Math.toRadians(0);// 312.1
+        public static final double kBackLeftAngularOffset = Math.toRadians(0); // 168.3
+        public static final double kBackRightAngularOffset = Math.toRadians(0); // 126.6
 
         // Spark MAX Drive Motor CAN IDs
         public static final int kFrontLeftDriveMotorCanId = 23;
@@ -150,6 +162,11 @@ public final class Constants {
         public static final int kBackRightTurnEncoderCanId = 52;
 
         public static final boolean kGyroReversed = true;
+
+        public static double kTranslationSlew = 1.55;
+        public static double kRotationSlew = 3.00;
+        public static double kVoltCompensation = 12.6;
+
     }
 
     public static final class ModuleConstants {
@@ -167,7 +184,10 @@ public final class Constants {
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-        public static final double kWheelDiameterMeters = 0.09525; //0.0762;
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.75);
+        public static double mk4iL1DriveGearRatio = 1 / ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0));// 8.14 .122807
+        public static double mk4iL1TurnGearRatio = 1 / ((14.0 / 50.0) * (10.0 / 60.0));// 21.43 1/.046667
+
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
         // 45 teeth on the wheel's bevel gear, 25 teeth on the first-stage spur gear, 15
@@ -181,6 +201,18 @@ public final class Constants {
                 / kDrivingMotorReduction; // meters
         public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
                 / kDrivingMotorReduction) / 60.0; // meters per second
+
+        public static final double kDriveMetersPerEncRev = (kWheelDiameterMeters * Math.PI) / mk4iL1DriveGearRatio;
+
+        // in 1 minute at 1 rpm encoder drive moves kDriveMetersPerEncRev
+        // so in 1 second encoder travels 1/60 revs = kDriveMetersPerEncRev/60
+        // so MPS
+        public static final double kDriveEncRPMperMPS = 60 / kDriveMetersPerEncRev;
+        public static double kFreeMetersPerSecond = 5600 / kDriveEncRPMperMPS;
+
+        public static double kPModuleTurnController;
+
+        public static final double kTurningDegreesPerEncRev = 360 / mk4iL1TurnGearRatio;
 
         public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
         public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
@@ -207,6 +239,10 @@ public final class Constants {
 
         public static final int kDrivingMotorCurrentLimit = 35; // amps
         public static final int kTurningMotorCurrentLimit = 35; // amps
+
+        public static double ksVolts = .055;
+        public static double kvVoltSecondsPerMeter = .2;
+        public static double kaVoltSecondsSquaredPerMeter = .02;
     }
 
     public static final class OIConstants {

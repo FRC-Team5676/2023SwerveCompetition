@@ -1,41 +1,66 @@
 package frc.robot.commands.swerve;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.controllers.joystick;
 
 public class TeleopSwerve extends CommandBase {
 
-    private double rotation;
-    private Translation2d translation;
-    private boolean _fieldRelative;
-    private DriveSubsystem _swerve;
-    private joystick _driver;
+    private final DriveSubsystem m_swerveDrive;
+    private final SlewRateLimiter m_slewX = new SlewRateLimiter(DriveConstants.kTranslationSlew);
+    private final SlewRateLimiter m_slewY = new SlewRateLimiter(DriveConstants.kTranslationSlew);
+    private final SlewRateLimiter m_slewRot = new SlewRateLimiter(DriveConstants.kRotationSlew);
+    private final DoubleSupplier m_throttleInput, m_strafeInput, m_rotationInput;
 
     /** Driver control */
-    public TeleopSwerve(DriveSubsystem swerve, joystick driver) {
-        _swerve = swerve;
-        addRequirements(_swerve);
+    public TeleopSwerve(
+            DriveSubsystem swerveDriveSubsystem,
+            DoubleSupplier throttleInput,
+            DoubleSupplier strafeInput,
+            DoubleSupplier rotationInput) {
+        m_swerveDrive = swerveDriveSubsystem;
+        m_throttleInput = throttleInput;
+        m_strafeInput = strafeInput;
+        m_rotationInput = rotationInput;
 
-        _driver = driver;
-        _fieldRelative = Constants.CustomConstants.fieldRelative;
+        addRequirements(swerveDriveSubsystem);
     }
 
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (RobotContainer.isAutoTargetOn)
-            return;
+        double throttle = m_throttleInput.getAsDouble() * Math.signum(m_throttleInput.getAsDouble());
+        double strafe = m_strafeInput.getAsDouble() * Math.signum(m_strafeInput.getAsDouble());
+        double rotation = m_rotationInput.getAsDouble() * Math.signum(m_rotationInput.getAsDouble());
 
-        double yAxis = _driver.getLeftStickY();
-        double xAxis = _driver.getLeftStickX();
-        double rAxis = _driver.getRightStickX();
+        // square values while keeping original sign
+        throttle = -Math.signum(throttle) * Math.pow(throttle, 2);
+        strafe = -Math.signum(strafe) * Math.pow(strafe, 2);
+        rotation = -Math.signum(rotation) * Math.pow(rotation, 2);
 
-        translation = new Translation2d(yAxis, xAxis).times(Constants.DriveConstants.kMaxSpeedMetersPerSecond);
-        rotation = rAxis * Constants.DriveConstants.kMaxAngularSpeed;
-        _swerve.drive(translation, rotation, _fieldRelative);
+        double throttle_sl = m_slewX.calculate(throttle);
+        double strafe_sl = m_slewY.calculate(strafe);
+        double rotation_sl = m_slewRot.calculate(rotation);
+
+        m_swerveDrive.drive(throttle_sl, strafe_sl, rotation_sl, true);
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }

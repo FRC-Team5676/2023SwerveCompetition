@@ -46,6 +46,7 @@ public class ControlArmSubsystem extends SubsystemBase {
     }
 
     public void drive(double pct) {
+        /*
         upperArmTargetPosition += pct * 1000;
         upperArmTargetPosition =
                 MathUtil.clamp(
@@ -53,14 +54,16 @@ public class ControlArmSubsystem extends SubsystemBase {
                         Constants.ControlArmConstants.kUpperArmTargetPosition * 0.95,
                         Constants.ControlArmConstants.kUpperArmTargetPosition * 1.05);
                         upperArmMotor.(ControlMode.Position, upperArmTargetPosition);
+        */
     }
 
     public void stop() {
-        motors[1].set(ControlMode.PercentOutput, 0.0);
+        //motors[1].set(ControlMode.PercentOutput, 0.0);
     }
 
     @Override
     public void periodic() {
+        /*
         SmartDashboard.putNumber("Elevator Absolute Angle", lowerArmEncoder.getSelectedSensorPosition());
         SmartDashboard.putNumber("Elivator position1 ", motors[0].getSelectedSensorPosition());
         SmartDashboard.putNumber("Elivator position2 ", motors[1].getSelectedSensorPosition());
@@ -75,6 +78,7 @@ public class ControlArmSubsystem extends SubsystemBase {
         mTopArm.config_kD(0, Constants.ControlArmConstants.kD);
         mTopArm.config_kF(0, Constants.ControlArmConstants.kF);
         // }
+        */
 
     }
 }

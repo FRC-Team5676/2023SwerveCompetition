@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final WPI_TalonSRX elevatorEncoder;
 
-    public double elevatorTargetHeight = Constants.ControlArmConstants.initialHeight;
+    public double elevatorTargetHeight = 0; //Constants.ControlArmConstants.initialHeight;
 
     public IntakeSubsystem() {
         kMaxPercentOutput = Constants.ControlArmConstants.kMaxPercentOutput;
@@ -30,9 +30,9 @@ public class IntakeSubsystem extends SubsystemBase {
         elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerEncoderDioPort);
         configElevatorEncoder();
 
-        mLeftElevatorMotor = new WPI_TalonFX(Constants.ControlArmConstants.kControArmUpperCanId);
-        mTopArm = new WPI_TalonFX(Constants.ControlArmConstants.kControlArmLowerCanId);
-        motors = new WPI_TalonFX[] {mLeftElevatorMotor, mTopArm};
+        mLeftElevatorMotor = new WPI_TalonSRX(Constants.ControlArmConstants.kControArmUpperCanId);
+        mTopArm = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerCanId);
+        motors = new WPI_TalonSRX[] {mLeftElevatorMotor, mTopArm};
         configMotors();
     }
 
@@ -76,8 +76,8 @@ public class IntakeSubsystem extends SubsystemBase {
         elevatorTargetHeight =
                 MathUtil.clamp(
                         elevatorTargetHeight,
-                        Constants.ControlArmConstants.minimumHeight,
-                        Constants.ControlArmConstants.maximumHeight);
+                        0, //Constants.ControlArmConstants.minimumHeight,
+                        0); //Constants.ControlArmConstants.maximumHeight);
         motors[1].set(ControlMode.Position, elevatorTargetHeight);
     }
 

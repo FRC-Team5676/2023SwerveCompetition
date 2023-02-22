@@ -71,7 +71,11 @@ public class RobotContainer {
     // Turning is controlled by the X axis of the right stick.
 
     swerve.setDefaultCommand(
-        new TeleopSwerve(swerve, driver));
+      new TeleopSwerve(
+          swerve, 
+          () -> driver.getLeftStickY(), 
+          () -> driver.getLeftStickX(), 
+          () -> driver.getRightStickX()));
 
     driver.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
     driver.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));

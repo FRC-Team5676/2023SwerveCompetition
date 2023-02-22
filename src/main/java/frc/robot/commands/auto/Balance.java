@@ -50,7 +50,7 @@ public class Balance extends CommandBase {
         }
 
         _translation = new Translation2d(_drivePower, 0);
-        _swerve.drive(_translation, _rotation, true);
+        _swerve.drive(_drivePower, 0, _rotation, true);
 
         // Debugging Print Statments
         System.out.println("Current Angle: " + _currentAngle);
