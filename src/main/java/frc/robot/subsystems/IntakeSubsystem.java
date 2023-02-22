@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.MathUtil;
@@ -12,9 +11,6 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
     
-    private final double kMaxPercentOutput;
-    private final double kRamp;
-
     private final WPI_TalonSRX mLeftElevatorMotor;
     private final WPI_TalonSRX mTopArm;
     private final WPI_TalonSRX[] motors;
@@ -24,9 +20,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public double elevatorTargetHeight = 0; //Constants.ControlArmConstants.initialHeight;
 
     public IntakeSubsystem() {
-        kMaxPercentOutput = Constants.ControlArmConstants.kMaxPercentOutput;
-        kRamp = Constants.ControlArmConstants.kRamp;
-
         elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kControlArmLowerEncoderDioPort);
         configElevatorEncoder();
 

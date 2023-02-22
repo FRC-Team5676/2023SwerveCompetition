@@ -11,7 +11,6 @@ import java.util.Collection;
 /**
  * Add your docs here.
  */
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,23 +19,15 @@ import java.util.Vector;
 import edu.wpi.first.wpilibj.Preferences;
 
 public class Pref {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
 
   private static Collection<String> v;
-  private static Enumeration<String> e;
   private static String tempString;
   private static double tempDouble;
 
   public static HashMap<String, Double> prefDict = new HashMap<>();
 
   static {
-
-    
- 
-
     prefDict.put("SwerveTune", 0.);
-    
 
     prefDict.put("SwerveTurnPoskP", .008);
     prefDict.put("SwerveTurnPoskI", 0.);
@@ -47,11 +38,9 @@ public class Pref {
     prefDict.put("SwerveTurnSMPoskI", 0.);
     prefDict.put("SwerveTurnSMPoskD", 0.);
     prefDict.put("SwerveTurnSMPoskIz", 0.);
-     
   }
 
   public static void ensureRioPrefs() {
-    // init();
     deleteUnused();
     addMissing();
   }
@@ -59,7 +48,7 @@ public class Pref {
   public static void deleteUnused() {
     v = new Vector<String>();
     v = Preferences.getKeys();
-    // v = (Vector<String>) RobotContainer.prefs.getKeys();
+
     String[] myArray = v.toArray(new String[v.size()]);
 
     for (int i = 0; i < v.size(); i++) {

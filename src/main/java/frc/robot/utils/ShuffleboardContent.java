@@ -19,12 +19,7 @@ import frc.robot.subsystems.modules.SwerveModule;
 /** Add your docs here. */
 public class ShuffleboardContent {
 
-        private int m_moduleNumber;
-
-        private ModulePosition m_modulePosition;
-
         static ShuffleboardLayout boolsLayout;
-
         public ShuffleboardContent() {
 
         }
