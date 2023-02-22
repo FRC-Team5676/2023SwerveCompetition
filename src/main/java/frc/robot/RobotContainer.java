@@ -28,8 +28,8 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem swerve = new DriveSubsystem();
   private final ControlArmSubsystem controlArm = new ControlArmSubsystem();
-  //private final LimelightSubsystem Limelight = new LimelightSubsystem();
-  //private final IntakeSubsystem intake = new IntakeSubsystem();
+  // private final LimelightSubsystem Limelight = new LimelightSubsystem();
+  // private final IntakeSubsystem intake = new IntakeSubsystem();
 
   // The driver's controller
   private final joystick driver = new joystick(0);
@@ -50,7 +50,8 @@ public class RobotContainer {
 
   private void addAutonomousChoices() {
     autonManager.addOption("Do Nothing", new InstantCommand());
-    //autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve, controlArm, intake));
+    // autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve,
+    // controlArm, intake));
   }
 
   /**
@@ -66,14 +67,14 @@ public class RobotContainer {
     // Turning is controlled by the X axis of the right stick.
 
     swerve.setDefaultCommand(
-      new TeleopSwerve(
-          swerve, 
-          () -> driver.getLeftStickY(), 
-          () -> driver.getLeftStickX(), 
-          () -> driver.getRightStickX()));
+        new TeleopSwerve(
+            swerve,
+            () -> driver.getStickY(),
+            () -> driver.getStickX(),
+            () -> driver.getStickZ()));
 
-    driver.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
-    driver.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
+    operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
+    operator.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
 
     controlArm.driveUpperArm(operator.getLeftStickY());
     controlArm.driveLowerArm(operator.getRightStickY());

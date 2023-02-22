@@ -56,7 +56,7 @@ public class xbox {
 
     /** The Y (up/down) position of the right joystick on the controller from -1.0 to 1.0 */
     public double getRightStickY() {
-        return deadzone(-controller.getRightY(), kDeadzoneStick);
+        return deadzone(controller.getRightY(), kDeadzoneStick);
     }
 
     /** The X (left/right) position of the left joystick on the controller from -1.0 to 1.0 */
@@ -66,7 +66,7 @@ public class xbox {
 
     /** The Y (up/down) position of the left joystick on the controller from -1.0 to 1.0 */
     public double getLeftStickY() {
-        return deadzone(-controller.getLeftY(), kDeadzoneStick);
+        return deadzone(controller.getLeftY(), kDeadzoneStick);
     }
 
     /** How much the left trigger on the controller is pressed from 0.0 to 1.0 */
@@ -85,7 +85,7 @@ public class xbox {
     }
 
     private double deadzone(double x, double dz) {
-        if (Math.abs(x) > dz) return x; //(x - dz * Math.signum(x)) / (1.0 - dz);
+        if (Math.abs(x) > dz) return x;
         else return 0.0;
     }
 }
