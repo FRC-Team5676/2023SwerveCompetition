@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.MathUtil;
@@ -17,9 +15,9 @@ public class ControlArmSubsystem extends SubsystemBase {
     private final double kMaxPercentOutput;
     private final double kRamp;
 
-    private final WPI_TalonFX mLeftElevatorMotor;
-    private final WPI_TalonFX mTopArm;
-    private final WPI_TalonFX[] motors;
+    private final WPI_TalonSRX mLeftElevatorMotor;
+    private final WPI_TalonSRX mTopArm;
+    private final WPI_TalonSRX[] motors;
 
     private final WPI_TalonSRX elevatorEncoder;
 
@@ -32,9 +30,9 @@ public class ControlArmSubsystem extends SubsystemBase {
         elevatorEncoder = new WPI_TalonSRX(Constants.ControlArmConstants.kElevatorEncoderId);
         configElevatorEncoder();
 
-        mLeftElevatorMotor = new WPI_TalonFX(Constants.ControlArmConstants.kLeftElevatorMotorId);
-        mTopArm = new WPI_TalonFX(Constants.ControlArmConstants.kRightElevatorMotorId);
-        motors = new WPI_TalonFX[] {mLeftElevatorMotor, mTopArm};
+        mLeftElevatorMotor = new WPI_TalonSRX(Constants.ControlArmConstants.kLeftElevatorMotorId);
+        mTopArm = new WPI_TalonSRX(Constants.ControlArmConstants.kRightElevatorMotorId);
+        motors = new WPI_TalonSRX[] {mLeftElevatorMotor, mTopArm};
         configMotors();
     }
 
@@ -56,7 +54,6 @@ public class ControlArmSubsystem extends SubsystemBase {
 
     private void configMotors() {
         mTopArm.configFactoryDefault();
-        mTopArm.setInverted(TalonFXInvertType.Clockwise);
 
         mTopArm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 

@@ -8,7 +8,7 @@ public class xbox {
 
     private final XboxController controller;
     private final double kDeadzoneStick = CustomConstants.stickDeadband;
-    private final double kDeadzoneTrigger = 0.0;
+    private final double kDeadzoneTrigger = 0.05;
 
     public final JoystickButton buttonA, buttonX, buttonY, buttonB;
     public final JoystickButton buttonBack, buttonStart;
@@ -85,7 +85,7 @@ public class xbox {
     }
 
     private double deadzone(double x, double dz) {
-        if (Math.abs(x) > dz) return (x - dz * Math.signum(x)) / (1.0 - dz);
+        if (Math.abs(x) > dz) return x; //(x - dz * Math.signum(x)) / (1.0 - dz);
         else return 0.0;
     }
 }

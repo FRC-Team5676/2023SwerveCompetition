@@ -33,7 +33,10 @@ public class SwerveModuleSparkMax {
      * controller. This configuration is specific to the REV MAXSwerve Module built with NEOs, SPARKS
      * MAX, and a Through Bore Encoder.
      */
-    public SwerveModuleSparkMax(int drivingCANId, int turningCANId, double chassisAngularOffset) {
+    public SwerveModuleSparkMax(int drivingCANId, 
+                                int turningCANId,  
+                                int absoluteEncoderCANId,  
+                                double chassisAngularOffset) {
         m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
         m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
@@ -64,7 +67,7 @@ public class SwerveModuleSparkMax {
 
         // Invert the turning encoder, since the output shaft rotates in the opposite direction of
         // the steering motor in the MAXSwerve Module.
-        m_turningEncoder.setInverted(ModuleConstants.kTurningEncoderInverted);
+        //m_turningEncoder.setInverted(ModuleConstants.kTurningEncoderInverted);
 
         // Enable PID wrap around for the turning motor. This will allow the PID
         // controller to go through 0 to get to the setpoint i.e. going from 350 degrees

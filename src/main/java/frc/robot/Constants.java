@@ -25,7 +25,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final class CustomConstants {
         public static final double rampRate = 2;
-        public static final double stickDeadband = 0.1;
+        public static final double stickDeadband = 0.05;
 
         public static final double lowSpeedMultiplier = 0.2;
 
@@ -197,23 +197,23 @@ public final class Constants {
 
         public static final double kDrivingP = 0.04;
         public static final double kDrivingI = 0;
-        public static final double kDrivingD = 0;
+        public static final double kDrivingD = 1;
         public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
         public static final double kDrivingMinOutput = -1;
         public static final double kDrivingMaxOutput = 1;
 
-        public static final double kTurningP = 0.4;
+        public static final double kTurningP = 0.04;
         public static final double kTurningI = 0;
-        public static final double kTurningD = 0;
-        public static final double kTurningFF = 0;
+        public static final double kTurningD = 1;
+        public static final double kTurningFF = 1;
         public static final double kTurningMinOutput = -1;
         public static final double kTurningMaxOutput = 1;
 
-        public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
-        public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
+        public static final IdleMode kDrivingMotorIdleMode = IdleMode.kCoast;
+        public static final IdleMode kTurningMotorIdleMode = IdleMode.kCoast;
 
-        public static final int kDrivingMotorCurrentLimit = 50; // amps
-        public static final int kTurningMotorCurrentLimit = 20; // amps
+        public static final int kDrivingMotorCurrentLimit = 35; // amps
+        public static final int kTurningMotorCurrentLimit = 35; // amps
     }
 
     public static final class OIConstants {
