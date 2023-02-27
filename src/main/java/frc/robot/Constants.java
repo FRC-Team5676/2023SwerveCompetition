@@ -138,10 +138,10 @@ public final class Constants {
                 new Translation2d(-kRobotLength / 2, kRobotWidth / 2),
                 new Translation2d(-kRobotLength / 2, -kRobotWidth / 2));
 
-        public static final double kFrontLeftAngularOffset = 44.39;
-        public static final double kFrontRightAngularOffset = 112.76;
-        public static final double kBackLeftAngularOffset = 123.22;
-        public static final double kBackRightAngularOffset = 257.78;
+        public static final double kFrontLeftAngularOffset = 42.80;
+        public static final double kFrontRightAngularOffset = 112.93;
+        public static final double kBackLeftAngularOffset = 125.15;
+        public static final double kBackRightAngularOffset = 255.41;
 
         // Spark MAX Drive Motor CAN IDs
         public static final int kFrontLeftDriveMotorCanId = 23;
