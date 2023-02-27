@@ -20,7 +20,7 @@ public class LowerArmModule extends SubsystemBase {
 
   public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
     // Drive Motor setup
-    m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
+    m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushed);
     m_driveMotor.restoreFactoryDefaults();
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
