@@ -14,19 +14,19 @@ public class ControlArmSubsystem extends SubsystemBase {
     private final LowerArmModule m_lowerArm = new LowerArmModule(m_lowerArmCanId, m_lowerArmMotorReversed);
 
     public void driveUpperArm(double throttle) {
-        m_upperArm.m_driveMotor.set(throttle);
+        m_upperArm.moveArm(throttle);
     }
 
     public void stopUpperArm() {
-        m_upperArm.m_driveMotor.set(0);
+        m_upperArm.moveArm(0);
     }
 
     public void driveLowerArm(double throttle) {
-        m_lowerArm.m_driveMotor.set(throttle);
+        m_lowerArm.moveArm(throttle);
     }
 
     public void stopLowerArm() {
-        m_lowerArm.m_driveMotor.set(0);
+        m_lowerArm.moveArm(0);
     }
 
     @Override

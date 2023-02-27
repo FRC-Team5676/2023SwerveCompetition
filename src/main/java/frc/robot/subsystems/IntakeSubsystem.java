@@ -59,6 +59,6 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void rotateIntake(double rotate) {
-
+        m_driveMotor.set(rotate);
     }
 }

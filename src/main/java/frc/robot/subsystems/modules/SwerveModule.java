@@ -36,7 +36,7 @@ public class SwerveModule extends SubsystemBase {
   public final RelativeEncoder m_driveEncoder;
   public final CANCoder m_turnCANcoder;
 
-  public ModulePosition m_modulePosition;// enum with test module names;
+  public ModulePosition m_modulePosition;
   public int m_moduleNumber;
   public String[] modAbrev = { "_FL", "_FR", "_RL", "_RR" };
   public double angle;
