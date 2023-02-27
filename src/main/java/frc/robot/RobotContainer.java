@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.ControlArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.utils.AutonManager;
 import frc.robot.controllers.xbox;
 import frc.robot.controllers.joystick;
@@ -28,6 +29,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem swerve = new DriveSubsystem();
   private final ControlArmSubsystem controlArm = new ControlArmSubsystem();
+  private final IntakeSubsystem intakeArm = new IntakeSubsystem();
   // private final LimelightSubsystem Limelight = new LimelightSubsystem();
   // private final IntakeSubsystem intake = new IntakeSubsystem();
 
@@ -78,6 +80,9 @@ public class RobotContainer {
 
     controlArm.driveUpperArm(operator.getLeftStickY());
     controlArm.driveLowerArm(operator.getRightStickY());
+
+    double intakeThrottle = operator.getRightTrigger() - operator.getLeftTrigger();
+    intakeArm.rotateIntake(intakeThrottle);
   }
 
   /**

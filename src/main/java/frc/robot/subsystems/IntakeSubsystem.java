@@ -17,14 +17,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final SparkMaxPIDController m_driveVelController;
     private final int VEL_SLOT = 1;
+    private final int m_intakeArmCanId = 41;
+    private final boolean m_intakeArmMotorReversed = true;
 
-    public IntakeSubsystem(int driveMotorCanChannel, boolean driveMotorReversed) {
+    public IntakeSubsystem() {
         // Drive Motor setup
-        m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
+        m_driveMotor = new CANSparkMax(m_intakeArmCanId, MotorType.kBrushless);
         m_driveMotor.restoreFactoryDefaults();
         m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
         m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
-        m_driveMotor.setInverted(driveMotorReversed);
+        m_driveMotor.setInverted(m_intakeArmMotorReversed);
         m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
         m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
