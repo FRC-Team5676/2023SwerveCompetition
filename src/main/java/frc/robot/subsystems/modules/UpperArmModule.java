@@ -3,19 +3,22 @@ package frc.robot.subsystems.modules;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.utils.ShuffleboardContent;
 
 public class UpperArmModule extends SubsystemBase {
 
-  private final RelativeEncoder m_driveEncoder;
-  private final CANSparkMax m_driveMotor;
+  public double rotations;
 
-  private final SparkMaxPIDController m_driveVelController;
+  private final RelativeEncoder m_driveEncoder;
+  private final SparkMaxPIDController m_driveController;
+  private final CANSparkMax m_driveMotor;
   private final int VEL_SLOT = 1;
 
   public UpperArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
@@ -35,30 +38,41 @@ public class UpperArmModule extends SubsystemBase {
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
-    m_driveVelController = m_driveMotor.getPIDController();
-    m_driveVelController.setP(.01, VEL_SLOT);
-    m_driveVelController.setD(0, VEL_SLOT);
-    m_driveVelController.setI(0, VEL_SLOT);
-    m_driveVelController.setIZone(1, VEL_SLOT);
+    m_driveController = m_driveMotor.getPIDController();
+    m_driveController.setP(.01, VEL_SLOT);
+    m_driveController.setD(0, VEL_SLOT);
+    m_driveController.setI(0, VEL_SLOT);
+    m_driveController.setIZone(1, VEL_SLOT);
+
+    ShuffleboardContent.initUpperArm(this);
   }
 
-  public void moveArm(double throttle) {
-    m_driveMotor.set(throttle);
+  public double getMinRotations() {
+    return 0;
+  }
+
+  public double getMaxRotations() {
+    return Math.toRadians(360 * 6);
   }
 
   public double getPosition() {
     return m_driveEncoder.getPosition();
   }
 
-  public static double limitMotorCmd(double motorCmdIn) {
-    return Math.max(Math.min(motorCmdIn, 1.0), -1.0);
+  public void moveArm(double throttle) {
+    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
+    rotations += throttle;
   }
 
-  public void setDriveBrakeMode(boolean on) {
-    if (on) {
-      m_driveMotor.setIdleMode(IdleMode.kBrake);
-    } else {
-      m_driveMotor.setIdleMode(IdleMode.kCoast);
-    }
+  public void stop() {
+    m_driveMotor.set(0);
+  }
+
+  public void setReferencePeriodic() {
+    m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void setReferenceValue(double rotation) {
+    rotations = rotation;
   }
 }

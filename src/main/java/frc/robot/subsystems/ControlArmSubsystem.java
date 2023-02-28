@@ -13,24 +13,36 @@ public class ControlArmSubsystem extends SubsystemBase {
     private final UpperArmModule m_upperArm = new UpperArmModule(m_upperArmCanId, m_upperArmMotorReversed);
     private final LowerArmModule m_lowerArm = new LowerArmModule(m_lowerArmCanId, m_lowerArmMotorReversed);
 
+    @Override
+    public void periodic() {
+        m_upperArm.setReferencePeriodic();
+    }
+
+
+    // Upper Arm
     public void driveUpperArm(double throttle) {
         m_upperArm.moveArm(throttle);
     }
 
     public void stopUpperArm() {
-        m_upperArm.moveArm(0);
+        m_upperArm.stop();
     }
 
+    public void stowUpperArm() {
+        m_upperArm.setReferenceValue(0);
+    }
+
+
+    // Lower Arm
     public void driveLowerArm(double throttle) {
         m_lowerArm.moveArm(throttle);
     }
 
     public void stopLowerArm() {
-        m_lowerArm.moveArm(0);
+        m_lowerArm.stop();
     }
 
-    @Override
-    public void periodic() {
-        // TODO: Add SmartDashboard stuff
+    public void stowLowerArm() {
+        m_lowerArm.setReferenceValue(0);
     }
-}
+  }

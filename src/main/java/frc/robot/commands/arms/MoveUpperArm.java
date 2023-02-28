@@ -10,7 +10,7 @@ import frc.robot.subsystems.ControlArmSubsystem;
 public class MoveUpperArm extends CommandBase {
 
     private final ControlArmSubsystem m_controlArm;
-    private final SlewRateLimiter m_slewX = new SlewRateLimiter(DriveConstants.kTranslationSlew);
+    private final SlewRateLimiter m_slew = new SlewRateLimiter(DriveConstants.kTranslationSlew);
     private final DoubleSupplier m_throttleInput;
 
     /** Driver control */
@@ -29,19 +29,16 @@ public class MoveUpperArm extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double throttle = m_throttleInput.getAsDouble() * Math.signum(m_throttleInput.getAsDouble());
-
-        // square values while keeping original sign
+        double throttle = m_throttleInput.getAsDouble();
         throttle = Math.signum(throttle) * Math.pow(throttle, 2);
-
-        double throttle_sl = m_slewX.calculate(throttle);
-
+        double throttle_sl = m_slew.calculate(throttle);
         m_controlArm.driveUpperArm(throttle_sl);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        m_controlArm.stopUpperArm();
     }
 
     // Returns true when the command should end.
