@@ -32,7 +32,7 @@ public class MoveUpperArm extends CommandBase {
         double throttle = m_throttleInput.getAsDouble() * Math.signum(m_throttleInput.getAsDouble());
 
         // square values while keeping original sign
-        throttle = -Math.signum(throttle) * Math.pow(throttle, 2);
+        throttle = Math.signum(throttle) * Math.pow(throttle, 2);
 
         double throttle_sl = m_slewX.calculate(throttle);
 

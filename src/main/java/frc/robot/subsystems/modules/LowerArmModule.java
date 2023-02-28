@@ -12,7 +12,7 @@ import frc.robot.Constants.ModuleConstants;
 
 public class LowerArmModule extends SubsystemBase {
 
-  public final RelativeEncoder m_driveEncoder;
+  //public final RelativeEncoder m_driveEncoder;
   public final CANSparkMax m_driveMotor;
 
   private final SparkMaxPIDController m_driveVelController;
@@ -31,9 +31,9 @@ public class LowerArmModule extends SubsystemBase {
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // drive encoder setup
-    m_driveEncoder = m_driveMotor.getEncoder();
-    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
+    //m_driveEncoder = m_driveMotor.getEncoder();
+    //m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
+    //m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
     m_driveVelController = m_driveMotor.getPIDController();
     m_driveVelController.setP(.01, VEL_SLOT);
@@ -47,7 +47,8 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public double getPosition() {
-    return m_driveEncoder.getPosition();
+    //return m_driveEncoder.getPosition();
+    return 0;
   }
 
   public static double limitMotorCmd(double motorCmdIn) {

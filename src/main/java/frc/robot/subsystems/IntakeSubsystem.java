@@ -17,7 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final SparkMaxPIDController m_driveVelController;
     private final int VEL_SLOT = 1;
-    private final int m_intakeArmCanId = 41;
+    private final int m_intakeArmCanId = 30;
     private final boolean m_intakeArmMotorReversed = true;
 
     public IntakeSubsystem() {
