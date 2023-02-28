@@ -1,13 +1,11 @@
 package frc.robot.subsystems.modules;
 
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -17,7 +15,7 @@ public class LowerArmModule extends SubsystemBase {
 
   public double rotations;
 
-  public final AbsoluteEncoder m_driveEncoder;
+  private final RelativeEncoder m_driveEncoder;
   public final CANSparkMax m_driveMotor;
 
   private final SparkMaxPIDController m_driveController;
@@ -25,7 +23,7 @@ public class LowerArmModule extends SubsystemBase {
 
   public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
     // Drive Motor setup
-    m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushed);
+    m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
     m_driveMotor.restoreFactoryDefaults();
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
@@ -36,7 +34,7 @@ public class LowerArmModule extends SubsystemBase {
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // drive encoder setup
-    m_driveEncoder = m_driveMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    m_driveEncoder = m_driveMotor.getEncoder();
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
@@ -62,8 +60,9 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public void moveArm(double throttle) {
-    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
-    rotations += throttle;
+    //rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
+    //rotations += throttle;
+    m_driveMotor.set(-throttle);
   }
 
   public void stop() {

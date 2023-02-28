@@ -2,15 +2,12 @@ package frc.robot.commands.arms;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.ControlArmSubsystem;
 
 public class MoveUpperArm extends CommandBase {
 
     private final ControlArmSubsystem m_controlArm;
-    private final SlewRateLimiter m_slew = new SlewRateLimiter(DriveConstants.kTranslationSlew);
     private final DoubleSupplier m_throttleInput;
 
     /** Driver control */
@@ -31,14 +28,13 @@ public class MoveUpperArm extends CommandBase {
     public void execute() {
         double throttle = m_throttleInput.getAsDouble();
         throttle = Math.signum(throttle) * Math.pow(throttle, 2);
-        double throttle_sl = m_slew.calculate(throttle);
-        m_controlArm.driveUpperArm(throttle_sl);
+        m_controlArm.driveUpperArm(throttle);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_controlArm.stopUpperArm();
+        //m_controlArm.stopUpperArm();
     }
 
     // Returns true when the command should end.

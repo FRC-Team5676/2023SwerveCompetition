@@ -6,7 +6,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -60,8 +59,9 @@ public class UpperArmModule extends SubsystemBase {
   }
 
   public void moveArm(double throttle) {
-    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
-    rotations += throttle;
+    //rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
+    //rotations += throttle;
+    m_driveMotor.set(throttle);
   }
 
   public void stop() {

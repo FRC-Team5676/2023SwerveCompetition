@@ -15,13 +15,13 @@ public class ControlArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_upperArm.setReferencePeriodic();
+        //m_upperArm.setReferencePeriodic();
     }
 
 
     // Upper Arm
     public void driveUpperArm(double throttle) {
-        m_upperArm.moveArm(throttle);
+        m_upperArm.moveArm(-throttle);
     }
 
     public void stopUpperArm() {
