@@ -6,9 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.arms.MoveLowerArm;
 import frc.robot.commands.arms.MoveUpperArm;
 import frc.robot.commands.arms.RotateIntake;
 import frc.robot.commands.swerve.TeleopSwerve;
@@ -78,11 +78,11 @@ public class RobotContainer {
             () -> driver.getStickX(),
             () -> driver.getStickZ()));
 
-    operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
+    //operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
     operator.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
 
     controlArm.setDefaultCommand(new MoveUpperArm(controlArm, () -> operator.getLeftStickY()));
-    controlArm.driveLowerArm(operator.getRightStickY());
+    controlArm.setDefaultCommand(new MoveLowerArm(controlArm, () -> operator.getRightStickY()));
 
     double intakeThrottle = operator.getRightTrigger() - operator.getLeftTrigger();
     intakeArm.setDefaultCommand(new RotateIntake(intakeArm, () -> intakeThrottle));
