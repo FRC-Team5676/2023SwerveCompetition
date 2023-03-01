@@ -20,9 +20,10 @@ public class StowPosition extends CommandBase {
 
     @Override
     public void execute() {
-        m_intake.stowIntake();
-        m_controlArm.stowLowerArm();
-        m_controlArm.stowUpperArm();
+        m_controlArm.setLowerArmPosition(0);
+        m_controlArm.setUpperArmPosition(Math.toRadians(50));
+        m_intake.setIntakePosition(0);
+        m_controlArm.setUpperArmPosition(0);
     }
 
     @Override

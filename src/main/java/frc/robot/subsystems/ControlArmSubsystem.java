@@ -10,26 +10,28 @@ public class ControlArmSubsystem extends SubsystemBase {
     private final boolean m_upperArmMotorReversed = true;
     private final int m_lowerArmCanId = 41;
     private final boolean m_lowerArmMotorReversed = true;
+
     private final UpperArmModule m_upperArm = new UpperArmModule(m_upperArmCanId, m_upperArmMotorReversed);
     private final LowerArmModule m_lowerArm = new LowerArmModule(m_lowerArmCanId, m_lowerArmMotorReversed);
 
     @Override
     public void periodic() {
-        //m_upperArm.setReferencePeriodic();
+        m_upperArm.setReferencePeriodic();
+        m_lowerArm.setReferencePeriodic();
     }
 
 
     // Upper Arm
     public void driveUpperArm(double throttle) {
-        m_upperArm.moveArm(-throttle);
+        m_upperArm.moveArm(throttle);
     }
 
     public void stopUpperArm() {
         m_upperArm.stop();
     }
 
-    public void stowUpperArm() {
-        m_upperArm.setReferenceValue(0);
+    public void setUpperArmPosition(double position) {
+        m_upperArm.setReferenceValue(position);
     }
 
 
@@ -42,7 +44,7 @@ public class ControlArmSubsystem extends SubsystemBase {
         m_lowerArm.stop();
     }
 
-    public void stowLowerArm() {
-        m_lowerArm.setReferenceValue(0);
+    public void setLowerArmPosition(double position) {
+        m_lowerArm.setReferenceValue(position);
     }
   }

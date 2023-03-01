@@ -6,6 +6,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -16,9 +17,11 @@ public class LowerArmModule extends SubsystemBase {
   public double rotations;
 
   private final RelativeEncoder m_driveEncoder;
-  public final CANSparkMax m_driveMotor;
-
+  private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
+
+  private final double minRotations = 360 * 0;
+  private final double maxRotations = 360 * 6;
   private final int VEL_SLOT = 1;
 
   public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
@@ -48,11 +51,11 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public double getMinRotations() {
-    return 0;
+    return Math.toRadians(minRotations);
   }
 
   public double getMaxRotations() {
-    return Math.toRadians(360 * 6);
+    return Math.toRadians(maxRotations);
   }
 
   public double getPosition() {
@@ -60,9 +63,10 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public void moveArm(double throttle) {
-    //rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
-    //rotations += throttle;
-    m_driveMotor.set(-throttle);
+    throttle = -1 * throttle;
+    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
+    rotations += throttle;
+    // m_driveMotor.set(throttle);
   }
 
   public void stop() {

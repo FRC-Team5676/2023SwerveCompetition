@@ -6,6 +6,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -13,78 +14,81 @@ import frc.robot.utils.ShuffleboardContent;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    public double rotations;
+  public double rotations;
 
-    public final RelativeEncoder m_driveEncoder;
-    public final CANSparkMax m_driveMotor;
+  private final int m_intakeArmCanId = 30;
+  private final boolean m_intakeArmMotorReversed = true;
 
-    private final SparkMaxPIDController m_driveController;
-    private final int VEL_SLOT = 1;
-    private final int m_intakeArmCanId = 30;
-    private final boolean m_intakeArmMotorReversed = true;
+  private final RelativeEncoder m_driveEncoder;
+  private final CANSparkMax m_driveMotor;
+  private final SparkMaxPIDController m_driveController;
 
-    public IntakeSubsystem() {
-        // Drive Motor setup
-        m_driveMotor = new CANSparkMax(m_intakeArmCanId, MotorType.kBrushless);
-        m_driveMotor.restoreFactoryDefaults();
-        m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-        m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
-        m_driveMotor.setInverted(m_intakeArmMotorReversed);
-        m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
-        m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-        m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
-        m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+  private final double minRotations = 360 * 0;
+  private final double maxRotations = 360 * 0.25;
+  private final int VEL_SLOT = 1;
 
-        // drive encoder setup
-        m_driveEncoder = m_driveMotor.getEncoder();
-        m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
-        m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
+  public IntakeSubsystem() {
+    // Drive Motor setup
+    m_driveMotor = new CANSparkMax(m_intakeArmCanId, MotorType.kBrushless);
+    m_driveMotor.restoreFactoryDefaults();
+    m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+    m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
+    m_driveMotor.setInverted(m_intakeArmMotorReversed);
+    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
+    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+    m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        m_driveController = m_driveMotor.getPIDController();
-        m_driveController.setP(.01, VEL_SLOT);
-        m_driveController.setD(0, VEL_SLOT);
-        m_driveController.setI(0, VEL_SLOT);
-        m_driveController.setIZone(1, VEL_SLOT);
+    // drive encoder setup
+    m_driveEncoder = m_driveMotor.getEncoder();
+    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
+    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
-        ShuffleboardContent.initIntakeArm(this);
-      }
+    m_driveController = m_driveMotor.getPIDController();
+    m_driveController.setP(.01, VEL_SLOT);
+    m_driveController.setD(0, VEL_SLOT);
+    m_driveController.setI(0, VEL_SLOT);
+    m_driveController.setIZone(1, VEL_SLOT);
 
-      @Override
-      public void periodic() {
-          //setReferencePeriodic();
-      }
-  
-      public double getMinRotations() {
-        return 0;
-      }
-    
-      public double getMaxRotations() {
-        return Math.toRadians(90);
-      }
-    
-      public double getPosition() {
-        return m_driveEncoder.getPosition();
-      }
+    ShuffleboardContent.initIntakeArm(this);
+  }
 
-      public void stowIntake() {
-        setReferenceValue(0);
-      }
-    
-      public void rotateIntake(double throttle) {
-        //rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
-        //rotations += throttle;
-        m_driveMotor.set(throttle);
-      }
-    
-      public void stop() {
-        m_driveMotor.set(0);
-      }
-    
-      public void setReferencePeriodic() {
-        m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
-      }
-    
-      public void setReferenceValue(double rotation) {
-        rotations = rotation;
-      }
+  @Override
+  public void periodic() {
+    setReferencePeriodic();
+  }
+
+  public double getMinRotations() {
+    return Math.toRadians(minRotations);
+  }
+
+  public double getMaxRotations() {
+    return Math.toRadians(maxRotations);
+  }
+
+  public double getPosition() {
+    return m_driveEncoder.getPosition();
+  }
+
+  public void setIntakePosition(double position) {
+    setReferenceValue(position);
+  }
+
+  public void rotateIntake(double throttle) {
+    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
+    rotations += throttle;
+    // m_driveMotor.set(throttle);
+  }
+
+  public void stop() {
+    m_driveMotor.set(0);
+  }
+
+  public void setReferencePeriodic() {
+    m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void setReferenceValue(double rotation) {
+    rotations = rotation;
+  }
 }
