@@ -130,49 +130,49 @@ public class ShuffleboardContent {
 
                 drLayout1.addNumber("Upper Arm Angle", () -> drive.getPosition())
                         .withPosition(1, 0)
-                        .withSize(2, 1);
+                        .withSize(8, 1);
                 drLayout1.addNumber("Upper Current Rotations", () -> drive.rotations)
-                        .withPosition(1, 2)
-                        .withSize(2, 1);
+                        .withPosition(1, 3)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Upper Min Rotations", () -> drive.getMinRotations())
-                        .withPosition(1, 4)
-                        .withSize(2, 1);
-                drLayout1.addNumber("Upper Max Rotations", () -> drive.getMaxRotations())
                         .withPosition(1, 6)
-                        .withSize(2, 1);
+                        .withSize(8, 1);
+                drLayout1.addNumber("Upper Max Rotations", () -> drive.getMaxRotations())
+                        .withPosition(1, 9)
+                        .withSize(8, 1);
         }
 
         public static void initLowerArm(LowerArmModule drive) {
                 ShuffleboardTab drLayout1 = Shuffleboard.getTab("Arms");
 
                 drLayout1.addNumber("Lower Arm Angle", () -> drive.getPosition())
-                        .withPosition(4, 0)
-                        .withSize(2, 1);
+                        .withPosition(9, 0)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Lower Current Rotations", () -> drive.rotations)
-                        .withPosition(4, 2)
-                        .withSize(2, 1);
+                        .withPosition(9, 3)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Lower Min Rotations", () -> drive.getMinRotations())
-                        .withPosition(4, 4)
-                        .withSize(2, 1);
+                        .withPosition(9, 6)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Lower Max Rotations", () -> drive.getMaxRotations())
-                        .withPosition(4, 6)
-                        .withSize(2, 1);
+                        .withPosition(9, 9)
+                        .withSize(8, 1);
         }
 
         public static void initIntakeArm(IntakeSubsystem drive) {
                 ShuffleboardTab drLayout1 = Shuffleboard.getTab("Arms");
 
                 drLayout1.addNumber("Intake Arm Angle", () -> drive.getPosition())
-                        .withPosition(7, 0)
-                        .withSize(2, 1);
+                        .withPosition(17, 0)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Intake Current Rotations", () -> drive.rotations)
-                        .withPosition(7, 2)
-                        .withSize(2, 1);
+                        .withPosition(17, 3)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Intake Min Rotations", () -> drive.getMinRotations())
-                        .withPosition(7, 4)
-                        .withSize(2, 1);
+                        .withPosition(17, 6)
+                        .withSize(8, 1);
                 drLayout1.addNumber("Intake Max Rotations", () -> drive.getMaxRotations())
-                        .withPosition(7, 6)
-                        .withSize(2, 1);
+                        .withPosition(17, 9)
+                        .withSize(8, 1);
         }
 }
