@@ -2,15 +2,15 @@ package frc.robot.commands.arms;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controllers.xbox;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ControlArmSubsystem;
 
-public class RotateIntake extends CommandBase {
+public class MoveArmsCommand extends CommandBase {
 
-    private final IntakeSubsystem m_controlArm;
+    private final ControlArmSubsystem m_controlArm;
     private final xbox m_controller;
 
     /** Driver control */
-    public RotateIntake(IntakeSubsystem controlArm, xbox controller) {
+    public MoveArmsCommand(ControlArmSubsystem controlArm, xbox controller) {
         m_controlArm = controlArm;
         m_controller = controller;
 
@@ -25,14 +25,14 @@ public class RotateIntake extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double throttle = m_controller.getRightTrigger() - m_controller.getLeftTrigger();
-        m_controlArm.rotateIntake(throttle * 0.10);
+        m_controlArm.driveLowerArm(m_controller.getRightStickY());
+        m_controlArm.driveUpperArm(m_controller.getLeftStickY());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        //m_controlArm.stop();
+        //m_controlArm.stopLowerArm();
     }
 
     // Returns true when the command should end.
