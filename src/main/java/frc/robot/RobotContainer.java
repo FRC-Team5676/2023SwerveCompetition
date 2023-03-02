@@ -6,9 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.arms.MoveArms;
-import frc.robot.commands.arms.RotateIntake;
-import frc.robot.commands.swerve.TeleopSwerve;
+import frc.robot.commands.arms.MoveArmsCommand;
+import frc.robot.commands.arms.RotateIntakeCommand;
+import frc.robot.commands.swerve.TeleopSwerveCommand;
 import frc.robot.subsystems.ControlArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -49,7 +49,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     swerve.setDefaultCommand(
-        new TeleopSwerve(
+        new TeleopSwerveCommand(
             swerve,
             () -> driver.getStickY(),
             () -> driver.getStickX(),
@@ -58,7 +58,7 @@ public class RobotContainer {
     //operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
     operator.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
 
-    controlArm.setDefaultCommand(new MoveArms(controlArm, operator));
-    intakeArm.setDefaultCommand(new RotateIntake(intakeArm, operator));
+    controlArm.setDefaultCommand(new MoveArmsCommand(controlArm, operator));
+    intakeArm.setDefaultCommand(new RotateIntakeCommand(intakeArm, operator));
   }
 }

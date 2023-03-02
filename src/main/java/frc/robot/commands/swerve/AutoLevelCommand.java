@@ -1,5 +1,5 @@
 package frc.robot.commands.swerve;
 
-public class DriveLock {
+public class AutoLevelCommand {
     
 }

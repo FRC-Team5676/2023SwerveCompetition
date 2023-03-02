@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TeleopSwerve extends CommandBase {
+public class TeleopSwerveCommand extends CommandBase {
 
     private final DriveSubsystem m_swerveDrive;
     private final SlewRateLimiter m_slewX = new SlewRateLimiter(DriveConstants.kTranslationSlew);
@@ -16,7 +16,7 @@ public class TeleopSwerve extends CommandBase {
     private final DoubleSupplier m_throttleInput, m_strafeInput, m_rotationInput;
 
     /** Driver control */
-    public TeleopSwerve(
+    public TeleopSwerveCommand(
             DriveSubsystem swerveDriveSubsystem,
             DoubleSupplier throttleInput,
             DoubleSupplier strafeInput,

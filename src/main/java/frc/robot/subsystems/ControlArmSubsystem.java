@@ -7,9 +7,9 @@ import frc.robot.subsystems.modules.UpperArmModule;
 public class ControlArmSubsystem extends SubsystemBase {
 
     private final int m_upperArmCanId = 40;
-    private final boolean m_upperArmMotorReversed = true;
+    private final boolean m_upperArmMotorReversed = false;
     private final int m_lowerArmCanId = 41;
-    private final boolean m_lowerArmMotorReversed = true;
+    private final boolean m_lowerArmMotorReversed = false;
 
     private final UpperArmModule m_upperArm = new UpperArmModule(m_upperArmCanId, m_upperArmMotorReversed);
     private final LowerArmModule m_lowerArm = new LowerArmModule(m_lowerArmCanId, m_lowerArmMotorReversed);

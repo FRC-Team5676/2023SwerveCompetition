@@ -22,7 +22,6 @@ public class LowerArmModule extends SubsystemBase {
 
   private final double minRotations = 360 * 0;
   private final double maxRotations = 360 * 6;
-  private final int VEL_SLOT = 1;
 
   public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
     // Drive Motor setup
@@ -42,10 +41,12 @@ public class LowerArmModule extends SubsystemBase {
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
     m_driveController = m_driveMotor.getPIDController();
-    m_driveController.setP(.01, VEL_SLOT);
-    m_driveController.setD(0, VEL_SLOT);
-    m_driveController.setI(0, VEL_SLOT);
-    m_driveController.setIZone(1, VEL_SLOT);
+    m_driveController.setP(0.1);
+    m_driveController.setI(1e-4);
+    m_driveController.setD(1);
+    m_driveController.setIZone(0);
+    m_driveController.setFF(0);
+    m_driveController.setOutputRange(-1, 1);
 
     ShuffleboardContent.initLowerArm(this);
   }
@@ -63,9 +64,8 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public void moveArm(double throttle) {
-    throttle = -1 * throttle;
-    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
     rotations += throttle;
+    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
     // m_driveMotor.set(throttle);
   }
 
@@ -73,11 +73,11 @@ public class LowerArmModule extends SubsystemBase {
     m_driveMotor.set(0);
   }
 
-  public void setReferencePeriodic() {
-    m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
-  }
-
   public void setReferenceValue(double rotation) {
     rotations = rotation;
+  }
+
+  public void setReferencePeriodic() {
+    m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
   }
 }
