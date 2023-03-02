@@ -1,15 +1,11 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.ShuffleboardContent;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -24,31 +20,25 @@ public class IntakeSubsystem extends SubsystemBase {
   private final SparkMaxPIDController m_driveController;
 
   private final double minRotations = 360 * 0;
-  private final double maxRotations = 360 * 0.25;
-  private final int VEL_SLOT = 1;
+  private final double maxRotations = 360 * 0.5;
 
   public IntakeSubsystem() {
     // Drive Motor setup
     m_driveMotor = new CANSparkMax(m_intakeArmCanId, MotorType.kBrushless);
     m_driveMotor.restoreFactoryDefaults();
-    m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-    m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
     m_driveMotor.setInverted(m_intakeArmMotorReversed);
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // drive encoder setup
     m_driveEncoder = m_driveMotor.getEncoder();
-    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
     m_driveController = m_driveMotor.getPIDController();
-    m_driveController.setP(.01, VEL_SLOT);
-    m_driveController.setD(0, VEL_SLOT);
-    m_driveController.setI(0, VEL_SLOT);
-    m_driveController.setIZone(1, VEL_SLOT);
+    m_driveController.setP(0.1);
+    m_driveController.setI(1e-4);
+    m_driveController.setD(1);
+    m_driveController.setIZone(0);
+    m_driveController.setFF(0);
+    m_driveController.setOutputRange(-1, 1);
 
     ShuffleboardContent.initIntakeArm(this);
   }
@@ -75,9 +65,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void rotateIntake(double throttle) {
-    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
-    rotations += throttle;
-    // m_driveMotor.set(throttle);
+    m_driveMotor.set(throttle);
   }
 
   public void stop() {
@@ -90,5 +78,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setReferenceValue(double rotation) {
     rotations = rotation;
+  }
+
+  public void moveIntakeToPosition(double position) {
+    setReferenceValue(position);
+    setReferencePeriodic();
   }
 }

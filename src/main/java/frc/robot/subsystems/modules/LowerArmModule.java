@@ -6,7 +6,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -51,6 +50,11 @@ public class LowerArmModule extends SubsystemBase {
     ShuffleboardContent.initLowerArm(this);
   }
 
+  @Override
+  public void periodic() {
+    setReferencePeriodic();
+  }
+
   public double getMinRotations() {
     return Math.toRadians(minRotations);
   }
@@ -63,10 +67,8 @@ public class LowerArmModule extends SubsystemBase {
     return m_driveEncoder.getPosition();
   }
 
-  public void moveArm(double throttle) {
-    rotations += throttle;
-    rotations = MathUtil.clamp(rotations, getMinRotations(), getMaxRotations());
-    // m_driveMotor.set(throttle);
+  public void driveArm(double throttle) {
+    m_driveMotor.set(throttle);
   }
 
   public void stop() {

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arms.MoveArmsCommand;
 import frc.robot.commands.arms.RotateIntakeCommand;
+import frc.robot.commands.auto.AutoRoutines;
 import frc.robot.commands.swerve.TeleopSwerveCommand;
 import frc.robot.subsystems.ControlArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -43,7 +44,8 @@ public class RobotContainer {
   }
 
   private void addAutonomousChoices() {
-    autonManager.addOption("Do Nothing", new InstantCommand());
+    autonManager.addDefaultOption("Set Cone and Leave", AutoRoutines.PlaceConeAndLeave(controlArm, intakeArm, swerve));
+    //autonManager.addOption("Do Nothing", new InstantCommand());
     // autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve, controlArm, intake));
   }
 

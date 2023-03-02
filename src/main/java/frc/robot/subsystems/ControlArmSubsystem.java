@@ -19,32 +19,24 @@ public class ControlArmSubsystem extends SubsystemBase {
         m_upperArm.setReferencePeriodic();
         m_lowerArm.setReferencePeriodic();
     }
-
-
-    // Upper Arm
+  
+     // Upper Arm
     public void driveUpperArm(double throttle) {
-        m_upperArm.moveArm(throttle);
+        m_upperArm.driveArm(throttle);
     }
 
-    public void stopUpperArm() {
-        m_upperArm.stop();
-    }
-
-    public void setUpperArmPosition(double position) {
+    public void moveUpperArmToPosition(double position) {
         m_upperArm.setReferenceValue(position);
+        m_upperArm.setReferencePeriodic();
     }
-
 
     // Lower Arm
     public void driveLowerArm(double throttle) {
-        m_lowerArm.moveArm(throttle);
+        m_lowerArm.driveArm(throttle);
     }
 
-    public void stopLowerArm() {
-        m_lowerArm.stop();
-    }
-
-    public void setLowerArmPosition(double position) {
+    public void moveLowerArmToPosition(double position) {
         m_lowerArm.setReferenceValue(position);
+        m_lowerArm.setReferencePeriodic();
     }
-  }
+}
