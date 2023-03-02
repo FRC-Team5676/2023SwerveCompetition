@@ -16,8 +16,8 @@ public class ControlArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_upperArm.setReferencePeriodic();
-        m_lowerArm.setReferencePeriodic();
+        //m_upperArm.setReferencePeriodic();
+        //m_lowerArm.setReferencePeriodic();
     }
   
      // Upper Arm

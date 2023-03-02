@@ -33,9 +33,9 @@ public class IntakeSubsystem extends SubsystemBase {
     m_driveEncoder = m_driveMotor.getEncoder();
 
     m_driveController = m_driveMotor.getPIDController();
-    m_driveController.setP(0.1);
-    m_driveController.setI(1e-4);
-    m_driveController.setD(1);
+    m_driveController.setP(0.01);
+    m_driveController.setI(0);
+    m_driveController.setD(0);
     m_driveController.setIZone(0);
     m_driveController.setFF(0);
     m_driveController.setOutputRange(-1, 1);
@@ -45,7 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    setReferencePeriodic();
+    //setReferencePeriodic();
   }
 
   public double getMinRotations() {
