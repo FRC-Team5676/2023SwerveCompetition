@@ -17,7 +17,7 @@ public class AutoRoutines {
                 new StartEndCommand(() -> lowerArm.moveToPosition(-20), () -> lowerArm.driveArm(0), lowerArm)
                         .withTimeout(2)),
                 new StartEndCommand(() -> upperArm.moveToPosition(163), () -> upperArm.driveArm(0), upperArm)
-                        .withTimeout(2.5),
+                        .withTimeout(3),
                 new StartEndCommand(() -> lowerArm.moveToPosition(87), () -> lowerArm.driveArm(0), lowerArm)
                         .withTimeout(3),
                 Commands.parallel(
