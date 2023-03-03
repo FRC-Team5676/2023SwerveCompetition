@@ -11,12 +11,13 @@ import frc.robot.subsystems.UpperArmSubsystem;
 public class AutoRoutines {
     public static Command PlaceConeAndLeave(LowerArmSubsystem lowerArm, UpperArmSubsystem upperArm, IntakeSubsystem intake, DriveSubsystem robot) {
         return Commands.sequence(
+                Commands.parallel(
                 new StartEndCommand(() -> upperArm.moveToPosition(40), () -> upperArm.driveArm(0), upperArm)
                         .withTimeout(2),
                 new StartEndCommand(() -> lowerArm.moveToPosition(-20), () -> lowerArm.driveArm(0), lowerArm)
-                        .withTimeout(2),
+                        .withTimeout(2)),
                 new StartEndCommand(() -> upperArm.moveToPosition(163), () -> upperArm.driveArm(0), upperArm)
-                        .withTimeout(3),
+                        .withTimeout(2),
                 new StartEndCommand(() -> lowerArm.moveToPosition(87), () -> lowerArm.driveArm(0), lowerArm)
                         .withTimeout(3),
                 Commands.parallel(
