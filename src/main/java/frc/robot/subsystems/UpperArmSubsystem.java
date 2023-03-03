@@ -1,35 +1,33 @@
-package frc.robot.subsystems.modules;
+package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.ShuffleboardContent;
 
-public class LowerArmModule extends SubsystemBase {
+public class UpperArmSubsystem extends SubsystemBase {
 
   public double rotations;
+
+  private final int m_upperArmCanId = 40;
+  private final boolean m_upperArmMotorReversed = true;
 
   private final RelativeEncoder m_driveEncoder;
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = -1.0;
-  private final double maxRotations = 3.0;
+  private final double minRotations = 0;
+  private final double maxRotations = 180;
 
-  public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
-    // Drive Motor setup
-    m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
+  public UpperArmSubsystem() {
+    m_driveMotor = new CANSparkMax(m_upperArmCanId, MotorType.kBrushless);
     m_driveMotor.restoreFactoryDefaults();
-    m_driveMotor.setInverted(driveMotorReversed);
+    m_driveMotor.setInverted(m_upperArmMotorReversed);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    // drive encoder setup
     m_driveEncoder = m_driveMotor.getEncoder();
 
     m_driveController = m_driveMotor.getPIDController();
@@ -40,12 +38,16 @@ public class LowerArmModule extends SubsystemBase {
     m_driveController.setFF(0);
     m_driveController.setOutputRange(-1, 1);
 
-    ShuffleboardContent.initLowerArm(this);
+    ShuffleboardContent.initUpperArm(this);
   }
 
   @Override
   public void periodic() {
-    //setReferencePeriodic();
+  }
+
+  public void moveToPosition(double position) {
+    setReferenceValue(position);
+    setReferencePeriodic();
   }
 
   public double getMinRotations() {
@@ -65,10 +67,6 @@ public class LowerArmModule extends SubsystemBase {
     m_driveMotor.set(throttle);
   }
 
-  public void stop() {
-    m_driveMotor.set(0);
-  }
-
   public void setReferenceValue(double rotation) {
     rotations = rotation;
   }
@@ -76,4 +74,5 @@ public class LowerArmModule extends SubsystemBase {
   public void setReferencePeriodic() {
     m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
   }
+
 }
