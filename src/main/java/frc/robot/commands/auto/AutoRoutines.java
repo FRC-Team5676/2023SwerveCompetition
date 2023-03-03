@@ -17,7 +17,7 @@ public class AutoRoutines {
                 new StartEndCommand(() -> lowerArm.moveToPosition(-20), () -> lowerArm.driveArm(0), lowerArm)
                         .withTimeout(2)),
                 new StartEndCommand(() -> upperArm.moveToPosition(163), () -> upperArm.driveArm(0), upperArm)
-                        .withTimeout(2),
+                        .withTimeout(2.5),
                 new StartEndCommand(() -> lowerArm.moveToPosition(87), () -> lowerArm.driveArm(0), lowerArm)
                         .withTimeout(3),
                 Commands.parallel(
@@ -26,13 +26,13 @@ public class AutoRoutines {
                 new StartEndCommand(() -> intake.moveIntakeToPosition(10), () -> intake.rotateIntake(0), intake)
                         .withTimeout(2)),
                 new StartEndCommand(() -> robot.drive(0.3, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
-                        .withTimeout(0.75),
+                        .withTimeout(1),
                 new StartEndCommand(() -> upperArm.moveToPosition(0), () -> upperArm.driveArm(0), upperArm)
                         .withTimeout(3),
                 Commands.parallel(
                 new StartEndCommand(() -> lowerArm.moveToPosition(22), () -> lowerArm.driveArm(0), lowerArm)
                         .withTimeout(3),
-                new StartEndCommand(() -> robot.drive(0.3, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
+                new StartEndCommand(() -> robot.drive(0.4, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
                         .withTimeout(1)));
     }
 }
