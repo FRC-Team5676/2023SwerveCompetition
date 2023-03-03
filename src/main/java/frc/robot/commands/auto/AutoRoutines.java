@@ -10,25 +10,27 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class AutoRoutines {
     public static Command PlaceConeAndLeave(ControlArmSubsystem arms, IntakeSubsystem intake, DriveSubsystem robot) {
         return Commands.sequence(
-                new StartEndCommand(() -> arms.moveLowerArmToPosition(-0.6), () -> arms.driveLowerArm(0), arms)
-                        .withTimeout(10),
-                new StartEndCommand(() -> arms.moveUpperArmToPosition(6), () -> arms.driveUpperArm(0), arms)
-                        .withTimeout(10),
-                new StartEndCommand(() -> arms.moveLowerArmToPosition(0.3), () -> arms.driveLowerArm(0), arms)
-                        .withTimeout(10),
-                new StartEndCommand(() -> arms.moveUpperArmToPosition(5), () -> arms.driveUpperArm(0), arms)
-                        .withTimeout(10),
-                new StartEndCommand(() -> robot.drive(0.5, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
-                        .withTimeout(10),
-                new StartEndCommand(() -> intake.moveIntakeToPosition(1.35), () -> intake.rotateIntake(0), intake)
-                        .withTimeout(10),
+                new StartEndCommand(() -> arms.moveUpperArmToPosition(40.0), () -> arms.driveUpperArm(0), arms)
+                        .withTimeout(5),
+                new StartEndCommand(() -> arms.moveLowerArmToPosition(-1.0), () -> arms.driveLowerArm(0), arms)
+                        .withTimeout(5),
+                new StartEndCommand(() -> arms.moveUpperArmToPosition(163), () -> arms.driveUpperArm(0), arms)
+                        .withTimeout(5),
+                new StartEndCommand(() -> arms.moveLowerArmToPosition(3.0), () -> arms.driveLowerArm(0), arms)
+                        .withTimeout(5),
+                new StartEndCommand(() -> arms.moveUpperArmToPosition(145), () -> arms.driveUpperArm(0), arms)
+                        .withTimeout(5),
+                new StartEndCommand(() -> robot.drive(-0.4, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
+                        .withTimeout(0.5),
+                new StartEndCommand(() -> intake.moveIntakeToPosition(9.23), () -> intake.rotateIntake(0), intake)
+                        .withTimeout(5),
                 new StartEndCommand(() -> arms.moveUpperArmToPosition(0), () -> arms.driveUpperArm(0), arms)
-                        .withTimeout(10),
-                new StartEndCommand(() -> arms.moveLowerArmToPosition(0.1), () -> arms.driveLowerArm(0), arms)
-                        .withTimeout(10),
-                new StartEndCommand(() -> intake.moveIntakeToPosition(0.5), () -> intake.rotateIntake(0), intake)
-                        .withTimeout(10),
-                new StartEndCommand(() -> robot.drive(0.5, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
-                        .withTimeout(10));
+                        .withTimeout(5),
+                new StartEndCommand(() -> arms.moveLowerArmToPosition(0.8), () -> arms.driveLowerArm(0), arms)
+                        .withTimeout(5),
+                new StartEndCommand(() -> intake.moveIntakeToPosition(4.14), () -> intake.rotateIntake(0), intake)
+                        .withTimeout(5),
+                new StartEndCommand(() -> robot.drive(-0.5, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
+                        .withTimeout(1));
     }
 }

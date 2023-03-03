@@ -68,6 +68,7 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public void driveArm(double throttle) {
+    throttle = -throttle;
     m_driveMotor.set(throttle);
   }
 
