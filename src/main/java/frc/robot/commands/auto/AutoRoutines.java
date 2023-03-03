@@ -12,6 +12,8 @@ public class AutoRoutines {
     public static Command PlaceConeAndLeave(LowerArmSubsystem lowerArm, UpperArmSubsystem upperArm, IntakeSubsystem intake, DriveSubsystem robot) {
         return Commands.sequence(
                 Commands.parallel(
+                new StartEndCommand(() -> robot.drive(0, 0, 0, true), () -> robot.drive(0, 0, 0, true), robot)
+                        .withTimeout(0.5),
                 new StartEndCommand(() -> upperArm.moveToPosition(40), () -> upperArm.driveArm(0), upperArm)
                         .withTimeout(2),
                 new StartEndCommand(() -> lowerArm.moveToPosition(-20), () -> lowerArm.driveArm(0), lowerArm)
