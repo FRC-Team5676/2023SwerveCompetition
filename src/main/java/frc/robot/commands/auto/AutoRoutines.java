@@ -34,13 +34,10 @@ public class AutoRoutines {
                                                                 .withTimeout(2)),
                                 new StartEndCommand(() -> robot.drive(0.3, 0, 0, true),
                                                 () -> robot.drive(0, 0, 0, true), robot)
-                                                .withTimeout(1),
+                                                .withTimeout(2),
                                 new StartEndCommand(() -> upperArm.moveToPosition(0), () -> upperArm.driveArm(0),
                                                 upperArm)
                                                 .withTimeout(3),
-                                new StartEndCommand(() -> robot.drive(0.3, 0, 0, true),
-                                                () -> robot.drive(0, 0, 0, true), robot)
-                                                .withTimeout(1),
                                 new StartEndCommand(() -> lowerArm.moveToPosition(22),
                                                 () -> lowerArm.driveArm(0), lowerArm)
                                                 .withTimeout(3));
