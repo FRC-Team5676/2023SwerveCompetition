@@ -19,25 +19,18 @@ public class LowerArmModule extends SubsystemBase {
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = 360 * 0;
-  private final double maxRotations = 360 * 6;
+  private final double minRotations = -1.0;
+  private final double maxRotations = 3.0;
 
   public LowerArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
     // Drive Motor setup
     m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
     m_driveMotor.restoreFactoryDefaults();
-    m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-    m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
     m_driveMotor.setInverted(driveMotorReversed);
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // drive encoder setup
     m_driveEncoder = m_driveMotor.getEncoder();
-    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMetersPerEncRev);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncRPMperMPS);
 
     m_driveController = m_driveMotor.getPIDController();
     m_driveController.setP(0.01);
@@ -56,11 +49,11 @@ public class LowerArmModule extends SubsystemBase {
   }
 
   public double getMinRotations() {
-    return Math.toRadians(minRotations);
+    return minRotations;
   }
 
   public double getMaxRotations() {
-    return Math.toRadians(maxRotations);
+    return maxRotations;
   }
 
   public double getPosition() {

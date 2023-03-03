@@ -16,8 +16,8 @@ public class UpperArmModule extends SubsystemBase {
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = 360 * 0;
-  private final double maxRotations = 360 * 6;
+  private final double minRotations = 0;
+  private final double maxRotations = 180;
 
   public UpperArmModule(int driveMotorCanChannel, boolean driveMotorReversed) {
     m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
@@ -44,11 +44,11 @@ public class UpperArmModule extends SubsystemBase {
   }
 
   public double getMinRotations() {
-    return Math.toRadians(minRotations);
+    return minRotations;
   }
 
   public double getMaxRotations() {
-    return Math.toRadians(maxRotations);
+    return maxRotations;
   }
 
   public double getPosition() {

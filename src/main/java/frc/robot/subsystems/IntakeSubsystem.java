@@ -19,8 +19,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = 360 * 0;
-  private final double maxRotations = 360 * 0.5;
+  private final double minRotations = 0;
+  private final double maxRotations = 9.23;
 
   public IntakeSubsystem() {
     // Drive Motor setup
@@ -49,11 +49,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public double getMinRotations() {
-    return Math.toRadians(minRotations);
+    return minRotations;
   }
 
   public double getMaxRotations() {
-    return Math.toRadians(maxRotations);
+    return maxRotations;
   }
 
   public double getPosition() {
