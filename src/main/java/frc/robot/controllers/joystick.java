@@ -1,11 +1,14 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.CustomConstants;
 
 public class joystick {
 
     private final Joystick controller;
+    public final JoystickButton button7;
+    public final JoystickButton button8;
     private final double kDeadzoneStick = CustomConstants.stickDeadband;
 
     /**
@@ -13,6 +16,8 @@ public class joystick {
      */
     public joystick(int port) {
         controller = new Joystick(port);
+        button7 = createButton(7);
+        button8 = createButton(8);
     }
 
     /** The X (left/right) position of the right joystick on the controller from -1.0 to 1.0 */
@@ -28,6 +33,10 @@ public class joystick {
     /** The Y (up/down) position of the right joystick on the controller from -1.0 to 1.0 */
     public double getStickZ() {
         return deadzone(controller.getZ(), kDeadzoneStick * 2);
+    }
+
+    private JoystickButton createButton(int buttonID) {
+        return new JoystickButton(this.controller, buttonID);
     }
 
     private double deadzone(double x, double dz) {

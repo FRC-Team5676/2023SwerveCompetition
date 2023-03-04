@@ -63,6 +63,9 @@ public class RobotContainer {
     //operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
     operator.buttonA.onTrue(new InstantCommand(swerve::toggleFieldRelative));
     operator.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
+    
+    driver.button7.onTrue(new InstantCommand(swerve::toggleFieldRelative));
+    driver.button8.onTrue(new InstantCommand(swerve::zeroGyro));
 
     lowerArm.setDefaultCommand(new MoveLowerArmCommand(lowerArm, operator));
     upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator) );
