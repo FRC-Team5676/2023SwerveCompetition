@@ -237,4 +237,8 @@ public class DriveSubsystem extends SubsystemBase {
     public void toggleSwerveMode() {
         swerveHighSpeedMode = !swerveHighSpeedMode;
     }
+
+    public void toggleFieldRelative() {
+        m_fieldRelative = !m_fieldRelative;
+    }
 }
