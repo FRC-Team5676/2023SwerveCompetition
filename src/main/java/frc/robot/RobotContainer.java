@@ -61,6 +61,7 @@ public class RobotContainer {
             () -> driver.getStickZ()));
 
     //operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
+    operator.buttonA.onTrue(new InstantCommand(swerve::toggleFieldRelative));
     operator.buttonY.onTrue(new InstantCommand(swerve::zeroGyro));
 
     lowerArm.setDefaultCommand(new MoveLowerArmCommand(lowerArm, operator));
