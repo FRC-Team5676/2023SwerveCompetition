@@ -69,7 +69,7 @@ public class RobotContainer {
     driver.button8.onTrue(new InstantCommand(swerve::zeroGyro));
 
     lowerArm.setDefaultCommand(new MoveLowerArmCommand(lowerArm, operator));
-    upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator) );
+    //upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator) );
     intakeArm.setDefaultCommand(new RotateIntakeCommand(intakeArm, operator));
   }
 }
