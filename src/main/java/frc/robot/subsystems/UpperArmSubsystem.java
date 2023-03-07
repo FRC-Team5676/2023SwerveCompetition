@@ -50,6 +50,21 @@ public class UpperArmSubsystem extends SubsystemBase {
     setReferencePeriodic();
   }
 
+  public void moveToMaxPosition() {
+    setReferenceValue(33);
+    setReferencePeriodic();
+  }
+
+  public void moveToMidPosition() {
+    setReferenceValue(29);
+    setReferencePeriodic();
+  }
+
+  public void moveToBottomPosition() {
+    setReferenceValue(0);
+    setReferencePeriodic();
+  }
+
   public double getMinRotations() {
     return minRotations;
   }
