@@ -13,20 +13,20 @@ public class AutoRoutines {
                         IntakeSubsystem intake, DriveSubsystem robot) {
                 return Commands.sequence(
                                 Commands.parallel(
-                                                new StartEndCommand(() -> upperArm.moveToPosition(40),
+                                                new StartEndCommand(() -> upperArm.moveToPosition(8),
                                                                 () -> upperArm.driveArm(0), upperArm)
                                                                 .withTimeout(2),
                                                 new StartEndCommand(() -> lowerArm.moveToPosition(-20),
                                                                 () -> lowerArm.driveArm(0), lowerArm)
                                                                 .withTimeout(2)),
-                                new StartEndCommand(() -> upperArm.moveToPosition(163), () -> upperArm.driveArm(0),
+                                new StartEndCommand(() -> upperArm.moveToPosition(33), () -> upperArm.driveArm(0),
                                                 upperArm)
                                                 .withTimeout(3),
                                 new StartEndCommand(() -> lowerArm.moveToPosition(87), () -> lowerArm.driveArm(0),
                                                 lowerArm)
                                                 .withTimeout(3),
                                 Commands.parallel(
-                                                new StartEndCommand(() -> upperArm.moveToPosition(145),
+                                                new StartEndCommand(() -> upperArm.moveToPosition(29),
                                                                 () -> upperArm.driveArm(0), upperArm)
                                                                 .withTimeout(2),
                                                 new StartEndCommand(() -> intake.moveIntakeToPosition(10),
