@@ -4,6 +4,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.ShuffleboardContent;
 
@@ -18,8 +20,8 @@ public class LowerArmSubsystem extends SubsystemBase {
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = -1.0;
-  private final double maxRotations = 3.0;
+  private final double minRotations = -20;
+  private final double maxRotations = 87;
 
   public LowerArmSubsystem() {
     // Drive Motor setup
@@ -51,6 +53,21 @@ public class LowerArmSubsystem extends SubsystemBase {
     setReferencePeriodic();
   }
 
+  public void moveToFarPosition() {
+    setReferenceValue(87);
+    setReferencePeriodic();
+  }
+
+  public void moveToMidPosition() {
+    setReferenceValue(22);
+    setReferencePeriodic();
+  }
+
+  public void moveToBackPosition() {
+    setReferenceValue(-20);
+    setReferencePeriodic();
+  }
+
   public double getMinRotations() {
     return minRotations;
   }
@@ -65,7 +82,8 @@ public class LowerArmSubsystem extends SubsystemBase {
 
   public void driveArm(double throttle) {
     throttle = -throttle;
-    m_driveMotor.set(throttle);
+    rotations += throttle;
+    setReferencePeriodic();
   }
 
   public void stop() {
@@ -77,6 +95,7 @@ public class LowerArmSubsystem extends SubsystemBase {
   }
 
   public void setReferencePeriodic() {
+    rotations = MathUtil.clamp(rotations, minRotations, maxRotations);
     m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
   }
 }

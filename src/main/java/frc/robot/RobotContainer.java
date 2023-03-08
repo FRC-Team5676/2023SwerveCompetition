@@ -61,15 +61,18 @@ public class RobotContainer {
             () -> driver.getStickZ()));
 
     //operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
+    //operator.leftBumper.and(operator.buttonY).onTrue(new InstantCommand(upperArm::moveToMidPosition));
     operator.buttonY.onTrue(new InstantCommand(upperArm::moveToMaxPosition));
-    operator.buttonB.onTrue(new InstantCommand(upperArm::moveToMidPosition));
     operator.buttonA.onTrue(new InstantCommand(upperArm::moveToBottomPosition));
+
+    operator.buttonB.onTrue(new InstantCommand(lowerArm::moveToFarPosition));
+    operator.buttonX.onTrue(new InstantCommand(lowerArm::moveToBackPosition));
     
     driver.button7.onTrue(new InstantCommand(swerve::toggleFieldRelative));
     driver.button8.onTrue(new InstantCommand(swerve::zeroGyro));
 
     lowerArm.setDefaultCommand(new MoveLowerArmCommand(lowerArm, operator));
-    //upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator) );
+    upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator) );
     intakeArm.setDefaultCommand(new RotateIntakeCommand(intakeArm, operator));
   }
 }

@@ -5,6 +5,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.ShuffleboardContent;
 
@@ -19,8 +20,8 @@ public class UpperArmSubsystem extends SubsystemBase {
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = 0;
-  private final double maxRotations = 180;
+  private final double minRotations = -2;
+  private final double maxRotations = 36;
 
   public UpperArmSubsystem() {
     m_driveMotor = new CANSparkMax(m_upperArmCanId, MotorType.kBrushless);
@@ -56,7 +57,7 @@ public class UpperArmSubsystem extends SubsystemBase {
   }
 
   public void moveToMidPosition() {
-    setReferenceValue(29);
+    setReferenceValue(20);
     setReferencePeriodic();
   }
 
@@ -79,7 +80,8 @@ public class UpperArmSubsystem extends SubsystemBase {
 
   public void driveArm(double throttle) {
     throttle = -throttle;
-    m_driveMotor.set(throttle);
+    rotations += throttle;
+    setReferencePeriodic();
   }
 
   public void setReferenceValue(double rotation) {
@@ -87,6 +89,7 @@ public class UpperArmSubsystem extends SubsystemBase {
   }
 
   public void setReferencePeriodic() {
+    rotations = MathUtil.clamp(rotations, minRotations, maxRotations);
     m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
   }
 
