@@ -55,10 +55,10 @@ public class RobotContainer {
   }
 
   private void addAutonomousChoices() {
-    //autonManager.addOption("Set Cone and Leave",
-    //    AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
     autonManager.addDefaultOption("Swerve Path 1", 
         new AutonomousPath1(swerve, xController, yController, zController));
+    autonManager.addOption("Set Cone and Leave",
+        AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
   }
 
   private void configureButtonBindings() {
