@@ -13,7 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonomousPath1 extends SequentialCommandGroup {
 
-    private final PathPlannerTrajectory path = PathPlanner.loadPath("AutonomousPath1", new PathConstraints(0.5, 0.5));
+    private final PathPlannerTrajectory path = PathPlanner.loadPath("AutonomousPath2", new PathConstraints(0.5, 0.5));
 
     public AutonomousPath1(DriveSubsystem driveSubsystem, PIDController xController,
             PIDController yController, PIDController ppthetaController) {
@@ -25,7 +25,7 @@ public class AutonomousPath1 extends SequentialCommandGroup {
                 //new WaitCommand(1),
                 new TrajectoryGenerator(driveSubsystem, xController, yController, ppthetaController, path, true),
                 //new GrabberSolenoid(grabberSubsystem),
-                new WaitCommand(2),
+                new WaitCommand(10),
                 new ResetYaw(driveSubsystem),
                 new ResetOdometryInverse(driveSubsystem));
     }

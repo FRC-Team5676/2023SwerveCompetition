@@ -204,7 +204,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
-        setModuleStates(desiredStates, false);
+        setModuleStates(desiredStates, true);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
