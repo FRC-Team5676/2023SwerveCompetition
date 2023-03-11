@@ -35,7 +35,7 @@ public class RobotContainer {
   // Create PID controllers for trajectory tracking
   public final PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
   public final PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-  private final PIDController ppThetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+  private final PIDController zController = new PIDController(AutoConstants.kPZController, 0, 0);
 
   // The driver's controller
   private final joystick driver = new joystick(1);
@@ -55,9 +55,10 @@ public class RobotContainer {
   }
 
   private void addAutonomousChoices() {
-    autonManager.addDefaultOption("Set Cone and Leave",
-        AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
-    autonManager.addOption("Swerve Path 1", new SwervePath1(swerve, xController, yController, ppThetaController));
+    //autonManager.addOption("Set Cone and Leave",
+    //    AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
+    autonManager.addDefaultOption("Swerve Path 1", 
+        new SwervePath1(swerve, xController, yController, zController));
   }
 
   private void configureButtonBindings() {

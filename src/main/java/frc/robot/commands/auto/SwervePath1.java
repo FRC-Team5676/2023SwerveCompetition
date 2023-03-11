@@ -13,7 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class SwervePath1 extends SequentialCommandGroup {
 
-    private final PathPlannerTrajectory path = PathPlanner.loadPath("PowerUpAuto-1", new PathConstraints(3.5, 4.5));
+    private final PathPlannerTrajectory path = PathPlanner.loadPath("PowerUpAuto-1", new PathConstraints(0.5, 0.5));
 
     public SwervePath1(DriveSubsystem driveSubsystem, PIDController xController,
             PIDController yController, PIDController ppthetaController) {
