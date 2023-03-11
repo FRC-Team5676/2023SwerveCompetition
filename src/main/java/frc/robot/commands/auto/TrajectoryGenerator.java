@@ -12,31 +12,31 @@ import frc.robot.commands.util.ResetOdometry;
 import frc.robot.subsystems.DriveSubsystem;
 
 // Runs a given pp-trajectory as a command 
-public class TrajectoryWeaver extends SequentialCommandGroup {
+public class TrajectoryGenerator extends SequentialCommandGroup {
 
     Consumer<ChassisSpeeds> chassisSpeeds;
 
     // Constructor that obtains required values
-    public TrajectoryWeaver(DriveSubsystem driveSubsystem, PIDController xController,
-            PIDController yController, PIDController ppthetaController,
-            PathPlannerTrajectory pptrajectory, Boolean isFirstPath) {
+    public TrajectoryGenerator(DriveSubsystem driveSubsystem, PIDController xController,
+            PIDController yController, PIDController zController,
+            PathPlannerTrajectory path, Boolean isFirstPath) {
 
         // Tell theta PID controller that its a circle
-        ppthetaController.enableContinuousInput(-180, 180);
+        zController.enableContinuousInput(-180, 180);
 
         // Check if first path
         if (isFirstPath) {
             // Reset robot odometry before movement
-            addCommands(new ResetOdometry(driveSubsystem, pptrajectory.getInitialHolonomicPose()));
+            addCommands(new ResetOdometry(driveSubsystem, path.getInitialHolonomicPose()));
         }
 
         addCommands(
                 new SequentialCommandGroup(
                         // Use Path Planner to move the swerve modules by letting it call
-                        // setModuleStates
-                        new PPSwerveControllerCommand(pptrajectory, driveSubsystem::getPose,
+                        // setModuleStatesInAutonomous (Closed Loop)
+                        new PPSwerveControllerCommand(path, driveSubsystem::getPose,
                                 DriveConstants.kDriveKinematics, xController, yController, 
-                                ppthetaController, driveSubsystem::setModuleStates, driveSubsystem),
+                                zController, driveSubsystem::setModuleStatesClosedLoop, driveSubsystem),
 
                         // Stop all module movement
                         new InstantCommand(() -> driveSubsystem.stopModules())));

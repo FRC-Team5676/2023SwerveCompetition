@@ -62,12 +62,12 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveDriveOdometry m_odometry;
 
     public boolean m_fieldRelative = Constants.CustomConstants.fieldRelative;
-    public Boolean swerveHighSpeedMode;
+    public Boolean m_swerveHighSpeedMode;
 
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem() {
 
-        swerveHighSpeedMode = true;
+        m_swerveHighSpeedMode = true;
 
         m_gyro = new AHRS(SPI.Port.kMXP);
         zeroGyro();
@@ -203,15 +203,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight.setDesiredState(desiredStates[3], isOpenLoop);
     }
 
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        setModuleStates(desiredStates, true);
+    public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
+        setModuleStates(desiredStates, false);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
     public void resetEncoders() {
         m_frontLeft.resetEncoders();
-        m_backLeft.resetEncoders();
         m_frontRight.resetEncoders();
+        m_backLeft.resetEncoders();
         m_backRight.resetEncoders();
     }
 
@@ -239,7 +239,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void toggleSwerveMode() {
-        swerveHighSpeedMode = !swerveHighSpeedMode;
+        m_swerveHighSpeedMode = !m_swerveHighSpeedMode;
     }
 
     public void toggleFieldRelative() {

@@ -12,7 +12,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.arms.MoveLowerArmCommand;
 import frc.robot.commands.arms.RotateIntakeCommand;
 import frc.robot.commands.auto.AutoRoutines;
-import frc.robot.commands.auto.SwervePath1;
+import frc.robot.commands.auto.AutonomousPath1;
 import frc.robot.commands.swerve.TeleopSwerveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -58,7 +58,7 @@ public class RobotContainer {
     //autonManager.addOption("Set Cone and Leave",
     //    AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
     autonManager.addDefaultOption("Swerve Path 1", 
-        new SwervePath1(swerve, xController, yController, zController));
+        new AutonomousPath1(swerve, xController, yController, zController));
   }
 
   private void configureButtonBindings() {
