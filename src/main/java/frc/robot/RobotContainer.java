@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.arms.MoveUpperArmCommand;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.arms.MoveLowerArmCommand;
 import frc.robot.commands.arms.RotateIntakeCommand;
 import frc.robot.commands.auto.AutoRoutines;
+import frc.robot.commands.auto.SwervePath1;
 import frc.robot.commands.swerve.TeleopSwerveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -29,6 +32,11 @@ public class RobotContainer {
   private final UpperArmSubsystem upperArm = new UpperArmSubsystem();
   private final IntakeSubsystem intakeArm = new IntakeSubsystem();
 
+  // Create PID controllers for trajectory tracking
+  public final PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+  public final PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+  private final PIDController ppThetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+
   // The driver's controller
   private final joystick driver = new joystick(1);
   private final xbox operator = new xbox(0);
@@ -47,9 +55,9 @@ public class RobotContainer {
   }
 
   private void addAutonomousChoices() {
-    autonManager.addDefaultOption("Set Cone and Leave", AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
-    //autonManager.addOption("Do Nothing", new InstantCommand());
-    // autonManager.addOption("PathPlanner Test", new PathPlannerAuto(swerve, controlArm, intake));
+    autonManager.addDefaultOption("Set Cone and Leave",
+        AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
+    autonManager.addOption("Swerve Path 1", new SwervePath1(swerve, xController, yController, ppThetaController));
   }
 
   private void configureButtonBindings() {
@@ -60,19 +68,20 @@ public class RobotContainer {
             () -> driver.getStickX(),
             () -> driver.getStickZ()));
 
-    //operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
-    //operator.leftBumper.and(operator.buttonY).onTrue(new InstantCommand(upperArm::moveToMidPosition));
+    // operator.buttonA.onTrue(new InstantCommand(swerve::toggleSwerveMode));
+    // operator.leftBumper.and(operator.buttonY).onTrue(new
+    // InstantCommand(upperArm::moveToMidPosition));
     operator.buttonY.onTrue(new InstantCommand(upperArm::moveToMaxPosition));
     operator.buttonA.onTrue(new InstantCommand(upperArm::moveToBottomPosition));
 
     operator.buttonB.onTrue(new InstantCommand(lowerArm::moveToFarPosition));
     operator.buttonX.onTrue(new InstantCommand(lowerArm::moveToBackPosition));
-    
+
     driver.button7.onTrue(new InstantCommand(swerve::toggleFieldRelative));
     driver.button8.onTrue(new InstantCommand(swerve::zeroGyro));
 
     lowerArm.setDefaultCommand(new MoveLowerArmCommand(lowerArm, operator));
-    upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator) );
+    upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator));
     intakeArm.setDefaultCommand(new RotateIntakeCommand(intakeArm, operator));
   }
 }

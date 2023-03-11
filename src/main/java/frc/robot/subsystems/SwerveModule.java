@@ -404,4 +404,10 @@ public class SwerveModule extends SubsystemBase {
 
     return driveMotorConnected && turnMotorConnected && turnCoderConnected;
   }
+
+  // Stop all motors on module 
+  public void stop() {
+    m_driveMotor.set(0);
+    m_turningMotor.set(0);
+  }
 }

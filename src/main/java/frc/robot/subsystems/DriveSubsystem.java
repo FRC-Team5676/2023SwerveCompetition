@@ -39,7 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kFrontRightTurningMotorReversed,
             DriveConstants.kFrontRightAngularOffset);
 
-    private final SwerveModule _backLeft = new SwerveModule(
+    private final SwerveModule m_backLeft = new SwerveModule(
             ModulePosition.BACK_LEFT,
             DriveConstants.kBackLeftDriveMotorCanId,
             DriveConstants.kBackLeftTurnMotorCanId,
@@ -48,7 +48,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kBackLeftTurningMotorReversed,
             DriveConstants.kBackLeftAngularOffset);
 
-    private final SwerveModule _backRight = new SwerveModule(
+    private final SwerveModule m_backRight = new SwerveModule(
             ModulePosition.BACK_RIGHT,
             DriveConstants.kBackRightDriveMotorCanId,
             DriveConstants.kBackRightTurnMotorCanId,
@@ -79,8 +79,8 @@ public class DriveSubsystem extends SubsystemBase {
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
-                        _backLeft.getPosition(),
-                        _backRight.getPosition()
+                        m_backLeft.getPosition(),
+                        m_backRight.getPosition()
                 });
     }
 
@@ -94,8 +94,8 @@ public class DriveSubsystem extends SubsystemBase {
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
-                        _backLeft.getPosition(),
-                        _backRight.getPosition()
+                        m_backLeft.getPosition(),
+                        m_backRight.getPosition()
                 });
     }
 
@@ -146,8 +146,8 @@ public class DriveSubsystem extends SubsystemBase {
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
-                        _backLeft.getPosition(),
-                        _backRight.getPosition()
+                        m_backLeft.getPosition(),
+                        m_backRight.getPosition()
                 },
                 pose);
     }
@@ -177,8 +177,8 @@ public class DriveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
         m_frontLeft.setDesiredState(swerveModuleStates[0], isOpenLoop);
         m_frontRight.setDesiredState(swerveModuleStates[1], isOpenLoop);
-        _backLeft.setDesiredState(swerveModuleStates[2], isOpenLoop);
-        _backRight.setDesiredState(swerveModuleStates[3], isOpenLoop);
+        m_backLeft.setDesiredState(swerveModuleStates[2], isOpenLoop);
+        m_backRight.setDesiredState(swerveModuleStates[3], isOpenLoop);
     }
 
     /** Sets the wheels into an X formation to prevent movement. */
@@ -186,8 +186,8 @@ public class DriveSubsystem extends SubsystemBase {
         boolean isOpenLoop = true;
         m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), isOpenLoop);
         m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), isOpenLoop);
-        _backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), isOpenLoop);
-        _backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), isOpenLoop);
+        m_backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), isOpenLoop);
+        m_backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), isOpenLoop);
     }
 
     /**
@@ -199,16 +199,20 @@ public class DriveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
         m_frontLeft.setDesiredState(desiredStates[0], isOpenLoop);
         m_frontRight.setDesiredState(desiredStates[1], isOpenLoop);
-        _backLeft.setDesiredState(desiredStates[2], isOpenLoop);
-        _backRight.setDesiredState(desiredStates[3], isOpenLoop);
+        m_backLeft.setDesiredState(desiredStates[2], isOpenLoop);
+        m_backRight.setDesiredState(desiredStates[3], isOpenLoop);
+    }
+
+    public void setModuleStates(SwerveModuleState[] desiredStates) {
+        setModuleStates(desiredStates, true);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
     public void resetEncoders() {
         m_frontLeft.resetEncoders();
-        _backLeft.resetEncoders();
+        m_backLeft.resetEncoders();
         m_frontRight.resetEncoders();
-        _backRight.resetEncoders();
+        m_backRight.resetEncoders();
     }
 
     /** Zeroes the heading of the robot. */
@@ -241,4 +245,12 @@ public class DriveSubsystem extends SubsystemBase {
     public void toggleFieldRelative() {
         m_fieldRelative = !m_fieldRelative;
     }
+
+  // Stop all module movement
+  public void stopModules() {
+    m_frontLeft.stop();
+    m_frontRight.stop();
+    m_backLeft.stop();
+    m_backRight.stop();
+  }
 }
