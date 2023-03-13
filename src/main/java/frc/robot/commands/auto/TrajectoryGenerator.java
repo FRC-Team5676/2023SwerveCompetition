@@ -36,7 +36,7 @@ public class TrajectoryGenerator extends SequentialCommandGroup {
                         // setModuleStatesInAutonomous (Closed Loop)
                         new PPSwerveControllerCommand(path, driveSubsystem::getPose,
                                 DriveConstants.kDriveKinematics, xController, yController, 
-                                zController, driveSubsystem::setModuleStatesClosedLoop, driveSubsystem),
+                                zController, driveSubsystem::setModuleStates, driveSubsystem),
 
                         // Stop all module movement
                         new InstantCommand(() -> driveSubsystem.stopModules())));

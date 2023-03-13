@@ -133,10 +133,10 @@ public final class Constants {
         public static final double kRobotLength = Units.inchesToMeters(19.25);
 
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kRobotLength / 2, kRobotWidth / 2),
-                new Translation2d(kRobotLength / 2, -kRobotWidth / 2),
-                new Translation2d(-kRobotLength / 2, kRobotWidth / 2),
-                new Translation2d(-kRobotLength / 2, -kRobotWidth / 2));
+                new Translation2d(kRobotLength / 2, -kRobotWidth / 2),  // Front Left
+                new Translation2d(kRobotLength / 2, kRobotWidth / 2),   // Front Right
+                new Translation2d(-kRobotLength / 2, -kRobotWidth / 2), // Back Left
+                new Translation2d(-kRobotLength / 2, kRobotWidth / 2)); // Back Right
 
         public static final double kFrontLeftAngularOffset = 41.3;
         public static final double kFrontRightAngularOffset = 113.2;
@@ -184,9 +184,9 @@ public final class Constants {
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.75);
-        public static double mk4iL1DriveGearRatio = 1 / ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0));// 8.14 .122807
-        public static double mk4iL1TurnGearRatio = 1 / ((14.0 / 50.0) * (10.0 / 60.0));// 21.43 1/.046667
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.75);             // 0.09525 meters
+        public static double mk4iL1DriveGearRatio = 1 / ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)); // 1/0.122807=8.142858
+        public static double mk4iL1TurnGearRatio = 1 / ((14.0 / 50.0) * (10.0 / 60.0));                  // 0.046667
 
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
@@ -202,7 +202,8 @@ public final class Constants {
         public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
                 / kDrivingMotorReduction) / 60.0; // meters per second
 
-        public static final double kDriveMetersPerEncRev = (kWheelDiameterMeters * Math.PI) / mk4iL1DriveGearRatio;
+        public static final double kDriveMetersPerEncRev = (kWheelDiameterMeters * Math.PI) / mk4iL1DriveGearRatio; // 0.2992367/8.142858=0.036748 meters per encoder rev
+                                                                                                                    // 1.446772 inches per encoder rev
 
         // in 1 minute at 1 rpm encoder drive moves kDriveMetersPerEncRev
         // so in 1 second encoder travels 1/60 revs = kDriveMetersPerEncRev/60

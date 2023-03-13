@@ -172,7 +172,7 @@ public class DriveSubsystem extends SubsystemBase {
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
                 m_fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                throttle, strafe, rotation, Rotation2d.fromDegrees(-m_gyro.getYaw()))
+                                throttle, strafe, rotation, Rotation2d.fromDegrees(m_gyro.getYaw()))
                         : new ChassisSpeeds(throttle, strafe, rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
         m_frontLeft.setDesiredState(swerveModuleStates[0], isOpenLoop);
@@ -203,7 +203,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight.setDesiredState(desiredStates[3], isOpenLoop);
     }
 
-    public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
+    public void setModuleStates(SwerveModuleState[] desiredStates) {
         setModuleStates(desiredStates, true);
     }
 
