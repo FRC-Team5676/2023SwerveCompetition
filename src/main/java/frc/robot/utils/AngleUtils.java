@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public final class AngleUtils {
-  
 
   public static CANCoderConfiguration generateCanCoderConfig() {
     CANCoderConfiguration sensorConfig = new CANCoderConfiguration();
@@ -20,10 +19,8 @@ public final class AngleUtils {
     return sensorConfig;
   }
 
-  public static SwerveModuleState optimize(
-      SwerveModuleState desiredState, Rotation2d currentAngle) {
-    double targetAngle =
-        placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
+  public static SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
+    double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
     double targetSpeed = desiredState.speedMetersPerSecond;
     double delta = targetAngle - currentAngle.getDegrees();
     if (Math.abs(delta) > 90) {
@@ -35,7 +32,7 @@ public final class AngleUtils {
 
   /**
    * @param scopeReference Current Angle
-   * @param newAngle Target Angle
+   * @param newAngle       Target Angle
    * @return Closest angle within scope
    */
   private static double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
