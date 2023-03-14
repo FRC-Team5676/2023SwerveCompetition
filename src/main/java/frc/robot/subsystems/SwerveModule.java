@@ -10,6 +10,8 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -42,7 +44,7 @@ public class SwerveModule extends SubsystemBase {
   private RelativeEncoder m_driveEncoder;
   private RelativeEncoder m_turnEncoder;
   private SparkMaxPIDController m_driveController;
-  private SparkMaxPIDController m_turnController;
+  private PIDController m_turnController;
   private SwerveModuleState state;
   private double lastAngle;
   private double tolDegPerSec = .05;
@@ -158,8 +160,9 @@ public class SwerveModule extends SubsystemBase {
     return m_turnEncoder.getPosition();
   }
 
-  public void turnMotorMove(double speed) {
-    m_turnMotor.setVoltage(speed * RobotController.getBatteryVoltage());
+  public void turnMotorMove(double angle) {
+    double pidOut = m_turnController.calculate(m_turnEncoder.getPosition(), angle);
+    m_turnMotor.setVoltage(pidOut * RobotController.getBatteryVoltage());
   }
 
   public void driveMotorMove(double speed) {
@@ -254,11 +257,9 @@ public class SwerveModule extends SubsystemBase {
     m_turnEncoder.setPositionConversionFactor(ModuleConstants.kTurningDegreesPerEncRev);
     m_turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurningDegreesPerEncRev / 60);
 
-    m_turnController = m_turnMotor.getPIDController();
-    m_turnController.setP(ModuleConstants.kTurnP);
-    m_turnController.setI(ModuleConstants.kTurnI);
-    m_turnController.setD(ModuleConstants.kTurnD);
-    m_turnController.setIZone(ModuleConstants.kTurnIZone);
+    m_turnController = new PIDController(ModuleConstants.kTurnP, 
+                                         ModuleConstants.kTurnI, 
+                                         ModuleConstants.kTurnD);
   }
 
   private void configCanCoder(int cancoderCanChannel, double turningEncoderOffset) {

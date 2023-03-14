@@ -98,10 +98,10 @@ public final class Constants {
         public static final double kRobotLength = Units.inchesToMeters(19.25);
 
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kRobotLength / 2, -kRobotWidth / 2),  // Front Left
-                new Translation2d(kRobotLength / 2, kRobotWidth / 2),   // Front Right
-                new Translation2d(-kRobotLength / 2, -kRobotWidth / 2), // Back Left
-                new Translation2d(-kRobotLength / 2, kRobotWidth / 2)); // Back Right
+                new Translation2d(kRobotLength / 2, kRobotWidth / 2),    // Front Left
+                new Translation2d(kRobotLength / 2, -kRobotWidth / 2),   // Front Right
+                new Translation2d(-kRobotLength / 2, kRobotWidth / 2),   // Back Left
+                new Translation2d(-kRobotLength / 2, -kRobotWidth / 2)); // Back Right
 
         // Constant Angular Wheel Offset in Degrees
         public static final double kFrontLeftAngularOffset = 41.3;
@@ -156,7 +156,6 @@ public final class Constants {
         public static final double kTurnP = 0.008;
         public static final double kTurnI = 0;
         public static final double kTurnD = 0;
-        public static final double kTurnIZone = 0;
 
         public static final int kDriveMotorCurrentLimit = 20; // amps
         public static final int kTurnMotorCurrentLimit = 20; // amps
