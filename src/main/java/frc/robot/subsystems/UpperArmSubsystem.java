@@ -21,7 +21,7 @@ public class UpperArmSubsystem extends SubsystemBase {
   private final SparkMaxPIDController m_driveController;
 
   private final double minRotations = -2;
-  private final double maxRotations = 36;
+  private final double maxRotations = 39;
 
   public UpperArmSubsystem() {
     m_driveMotor = new CANSparkMax(m_upperArmCanId, MotorType.kBrushless);
@@ -52,7 +52,7 @@ public class UpperArmSubsystem extends SubsystemBase {
   }
 
   public void moveToMaxPosition() {
-    setReferenceValue(33);
+    setReferenceValue(36);
     setReferencePeriodic();
   }
 
