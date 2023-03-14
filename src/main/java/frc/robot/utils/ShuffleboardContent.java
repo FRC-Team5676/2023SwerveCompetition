@@ -32,13 +32,13 @@ public class ShuffleboardContent {
 
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
-                String abrev = m_sm.modAbrev[m_moduleNumber];
+                String abrev = m_sm.m_modAbrev[m_moduleNumber];
 
                 ShuffleboardTab x = Shuffleboard.getTab("Drivetrain");
 
-                x.addBoolean("DriveCAN" + abrev, () -> m_sm.driveMotorConnected)
+                x.addBoolean("DriveCAN" + abrev, () -> m_sm.m_driveMotorConnected)
                                 .withPosition(8, m_moduleNumber);
-                x.addBoolean("TurnCAN" + abrev, () -> m_sm.turnMotorConnected)
+                x.addBoolean("TurnCAN" + abrev, () -> m_sm.m_turnMotorConnected)
                                 .withPosition(9, m_moduleNumber);
 
         }
@@ -46,7 +46,7 @@ public class ShuffleboardContent {
         public static void initDriveShuffleboard(SwerveModule m_sm) {
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
-                String abrev = m_sm.modAbrev[m_moduleNumber];
+                String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 String driveLayout = m_modulePosition.toString() + " Drive";
 
                 ShuffleboardLayout drLayout = Shuffleboard.getTab("Drivetrain")
@@ -63,31 +63,31 @@ public class ShuffleboardContent {
         public static void initTurnShuffleboard(SwerveModule m_sm) {
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
-                String abrev = m_sm.modAbrev[m_moduleNumber];
+                String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 String turnLayout = m_modulePosition.toString() + " Turn";
 
                 ShuffleboardLayout tuLayout = Shuffleboard.getTab("Drivetrain")
                                 .getLayout(turnLayout, BuiltInLayouts.kList).withPosition(m_moduleNumber * 2, 2)
                                 .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
-                tuLayout.addNumber("Turn Setpoint Deg " + abrev, () -> m_sm.angle);
+                tuLayout.addNumber("Turn Setpoint Deg " + abrev, () -> m_sm.m_desiredAngle);
                 tuLayout.addNumber("Turn Enc Pos " + abrev, () -> m_sm.getTurnPosition() % 360);
-                tuLayout.addNumber("Act Ang Deg " + abrev, () -> m_sm.actualAngleDegrees);
-                tuLayout.addNumber("TurnAngleOut" + abrev, () -> m_sm.m_turningMotor.getAppliedOutput());
+                tuLayout.addNumber("Act Ang Deg " + abrev, () -> m_sm.m_actualAngleDegrees);
+                tuLayout.addNumber("TurnAngleOut" + abrev, () -> m_sm.m_turnMotor.getAppliedOutput());
                 tuLayout.addNumber("Position" + abrev, () -> m_sm.m_turnCANcoder.getPosition());
                 tuLayout.addNumber("Current Amps" + abrev, () -> m_sm.getTurnCurrent());
                 tuLayout.addNumber("Abs Offset" + abrev, () -> m_sm.m_turningEncoderOffset);
-                tuLayout.addNumber("Firmware" + abrev, () -> m_sm.m_turningMotor.getFirmwareVersion());
+                tuLayout.addNumber("Firmware" + abrev, () -> m_sm.m_turnMotor.getFirmwareVersion());
         }
 
         public static void initCoderBooleanShuffleboard(SwerveModule m_sm) {
 
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
-                String abrev = m_sm.modAbrev[m_moduleNumber];
+                String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 ShuffleboardTab x = Shuffleboard.getTab("CanCoders");
 
-                x.addBoolean("CANCoder Connected" + abrev, () -> m_sm.turnCoderConnected)
+                x.addBoolean("CANCoder Connected" + abrev, () -> m_sm.m_turnCoderConnected)
                                 .withPosition(8, m_moduleNumber * 2);
 
                 CANCoderFaults faults = new CANCoderFaults();
@@ -100,7 +100,7 @@ public class ShuffleboardContent {
         public static void initCANCoderShuffleboard(SwerveModule m_sm) {
                 ModulePosition m_modulePosition = m_sm.getModulePosition();
                 int m_moduleNumber = m_modulePosition.ordinal();
-                String abrev = m_sm.modAbrev[m_moduleNumber];
+                String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 String canCoderLayout = m_modulePosition.toString() + " CanCoder";
 
                 ShuffleboardLayout coderLayout = Shuffleboard.getTab("CanCoders")

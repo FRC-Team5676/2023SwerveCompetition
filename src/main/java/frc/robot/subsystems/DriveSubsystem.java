@@ -15,7 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.Enums.ModulePosition;
 
@@ -61,7 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final AHRS m_gyro;
     private final SwerveDriveOdometry m_odometry;
 
-    public boolean m_fieldRelative = Constants.CustomConstants.fieldRelative;
+    public boolean m_fieldRelative = DriveConstants.kfieldRelative;
     public Boolean m_swerveHighSpeedMode;
 
     /** Creates a new DriveSubsystem. */
@@ -158,14 +157,14 @@ public class DriveSubsystem extends SubsystemBase {
      * @param xSpeed        Speed of the robot in the x direction (forward).
      * @param ySpeed        Speed of the robot in the y direction (sideways).
      * @param rot           Angular rate of the robot.
-     * @param fieldRelative Whether the provided x and y speeds are relative to the
+     * @param kfieldRelative Whether the provided x and y speeds are relative to the
      *                      field.
      */
     public void drive(double throttle, double strafe, double rotation, boolean isOpenLoop) {
 
-        throttle *= DriveConstants.kMaxSpeedMetersPerSecond;
-        strafe *= DriveConstants.kMaxSpeedMetersPerSecond;
-        rotation *= DriveConstants.kMaxRotationRadiansPerSecond;
+        throttle *= DriveConstants.kMaxAllowedVelMetersPerSec;
+        strafe *= DriveConstants.kMaxAllowedVelMetersPerSec;
+        rotation *= DriveConstants.kMaxAllowedRotVelRadsPerSec;
 
         SmartDashboard.putNumber("Rotn1", rotation);
 
@@ -174,7 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                 throttle, strafe, rotation, Rotation2d.fromDegrees(m_gyro.getYaw()))
                         : new ChassisSpeeds(throttle, strafe, rotation));
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxAllowedVelMetersPerSec);
         m_frontLeft.setDesiredState(swerveModuleStates[0], isOpenLoop);
         m_frontRight.setDesiredState(swerveModuleStates[1], isOpenLoop);
         m_backLeft.setDesiredState(swerveModuleStates[2], isOpenLoop);
@@ -196,7 +195,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param desiredStates The desired SwerveModule states.
      */
     public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxAllowedVelMetersPerSec);
         m_frontLeft.setDesiredState(desiredStates[0], isOpenLoop);
         m_frontRight.setDesiredState(desiredStates[1], isOpenLoop);
         m_backLeft.setDesiredState(desiredStates[2], isOpenLoop);
