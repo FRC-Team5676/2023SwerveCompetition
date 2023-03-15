@@ -23,7 +23,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.Enums.ModulePosition;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.AngleUtils;
-import frc.robot.utils.NeoConversions;
 import frc.robot.utils.ShuffleboardContent;
 
 public class SwerveModule extends SubsystemBase {
