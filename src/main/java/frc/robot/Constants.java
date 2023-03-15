@@ -132,7 +132,7 @@ public final class Constants {
 
         public static final double kTranslationSlew = 1.55;
         public static final double kRotationSlew = 3.00;
-        public static final double kVoltCompensation = 12.5;
+        public static final double kVoltCompensation = 12.6;
 
     }
 

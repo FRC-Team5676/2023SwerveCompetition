@@ -125,9 +125,7 @@ public class SwerveModule extends SubsystemBase {
      * drive axis
      */
     if (isOpenLoop)
-      m_driveMotor.set(state.speedMetersPerSecond
-          / NeoConversions.maxMechMetersPerSec(ModuleConstants.kWheelCircumferenceMeters,
-              ModuleConstants.kMk4iDriveGearRatio));
+      m_driveMotor.set(state.speedMetersPerSecond / DriveConstants.kMaxAllowedVelMetersPerSec);
     else {
       m_driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
     }
@@ -163,10 +161,6 @@ public class SwerveModule extends SubsystemBase {
   public void turnMotorMove(double angle) {
     double pidOut = m_turnController.calculate(m_turnEncoder.getPosition(), angle);
     m_turnMotor.setVoltage(pidOut * RobotController.getBatteryVoltage());
-  }
-
-  public void driveMotorMove(double speed) {
-    m_driveMotor.setVoltage(speed * RobotController.getBatteryVoltage());
   }
 
   public double getDriveVelocity() {
