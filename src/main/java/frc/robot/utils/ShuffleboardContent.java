@@ -72,6 +72,7 @@ public class ShuffleboardContent {
 
                 tuLayout.addNumber("Turn Setpoint Deg " + abrev, () -> m_sm.m_desiredAngle);
                 tuLayout.addNumber("Turn Enc Pos " + abrev, () -> m_sm.getTurnPosition() % 360);
+                tuLayout.addNumber("Turn Velocity " + abrev, () -> m_sm.getTurnVelocity());
                 tuLayout.addNumber("Act Ang Deg " + abrev, () -> m_sm.m_actualAngleDegrees);
                 tuLayout.addNumber("TurnAngleOut" + abrev, () -> m_sm.m_turnMotor.getAppliedOutput());
                 tuLayout.addNumber("Position" + abrev, () -> m_sm.m_turnCANcoder.getPosition());

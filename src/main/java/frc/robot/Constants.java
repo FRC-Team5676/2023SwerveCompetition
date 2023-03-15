@@ -139,21 +139,23 @@ public final class Constants {
     public static final class ModuleConstants {
         public static final boolean kTurningEncoderInverted = true;
 
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.75);            // 0.09525 meters
-        public static double kMk4iDriveGearRatio = 1 / ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)); // 1/0.122807=8.142858
-        public static double kMk4iTurnGearRatio = 1 / ((14.0 / 50.0) * (10.0 / 60.0));                  // 1/0.046667=21.428418
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(4);           // 0.1016 meters
+        public static double kMk4iDriveGearRatio = ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)); // 0.122807 = 1/8.142858
+        public static double kMk4iTurnGearRatio = ((14.0 / 50.0) * (10.0 / 60.0));                  // 0.046667 = 1/21.428418
 
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
-        public static final double kDrivingMetersPerEncRev = NeoConversions.neoStepsToMechMeters(NeoConversions.kNeoStepsPerRev, ModuleConstants.kWheelCircumferenceMeters, ModuleConstants.kMk4iDriveGearRatio);
-        public static final double kTurningDegreesPerEncRev = NeoConversions.neoStepToMechDeg(NeoConversions.kNeoStepsPerRev, ModuleConstants.kMk4iTurnGearRatio);
+        public static final double kDriveEncoderRot2Meter = kMk4iDriveGearRatio * Math.PI * kWheelDiameterMeters;
+        public static final double kTurnEncoderRot2Rad = kMk4iTurnGearRatio * 2 * Math.PI;
+        public static final double kDriveEncoderRpm2Mps = kDriveEncoderRot2Meter / 60;
+        public static final double kTurnEncoderRpm2Rps = kTurnEncoderRot2Rad / 60;
 
         public static final double kDriveP = 0.01;
         public static final double kDriveI = 0;
         public static final double kDriveD = 0;
         public static final double kDriveIZone = 1;
 
-        public static final double kTurnP = 0.008;
+        public static final double kTurnP = 0.008; // 0.5 in video
         public static final double kTurnI = 0;
         public static final double kTurnD = 0;
 
