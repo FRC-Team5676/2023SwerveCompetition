@@ -5,31 +5,30 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.ShuffleboardContent;
 
-public class IntakeSubsystem extends SubsystemBase {
+public class UpperArmSubsystem extends SubsystemBase {
 
   public double rotations;
 
-  private final int m_intakeArmCanId = 30;
-  private final boolean m_intakeArmMotorReversed = true;
+  private final int m_upperArmCanId = 40;
+  private final boolean m_upperArmMotorReversed = true;
 
   private final RelativeEncoder m_driveEncoder;
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = 0;
-  private final double maxRotations = 9.23;
+  private final double minRotations = -2;
+  private final double maxRotations = 36;
 
-  public IntakeSubsystem() {
-    // Drive Motor setup
-    m_driveMotor = new CANSparkMax(m_intakeArmCanId, MotorType.kBrushless);
+  public UpperArmSubsystem() {
+    m_driveMotor = new CANSparkMax(m_upperArmCanId, MotorType.kBrushless);
     m_driveMotor.restoreFactoryDefaults();
-    m_driveMotor.setInverted(m_intakeArmMotorReversed);
+    m_driveMotor.setInverted(m_upperArmMotorReversed);
     m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    // drive encoder setup
     m_driveEncoder = m_driveMotor.getEncoder();
 
     m_driveController = m_driveMotor.getPIDController();
@@ -40,12 +39,31 @@ public class IntakeSubsystem extends SubsystemBase {
     m_driveController.setFF(0);
     m_driveController.setOutputRange(-1, 1);
 
-    ShuffleboardContent.initIntakeArm(this);
+    ShuffleboardContent.initUpperArm(this);
   }
 
   @Override
   public void periodic() {
-    //setReferencePeriodic();
+  }
+
+  public void moveToPosition(double position) {
+    setReferenceValue(position);
+    setReferencePeriodic();
+  }
+
+  public void moveToMaxPosition() {
+    setReferenceValue(33);
+    setReferencePeriodic();
+  }
+
+  public void moveToMidPosition() {
+    setReferenceValue(20);
+    setReferencePeriodic();
+  }
+
+  public void moveToBottomPosition() {
+    setReferenceValue(0);
+    setReferencePeriodic();
   }
 
   public double getMinRotations() {
@@ -60,28 +78,19 @@ public class IntakeSubsystem extends SubsystemBase {
     return m_driveEncoder.getPosition();
   }
 
-  public void setIntakePosition(double position) {
-    setReferenceValue(position);
-  }
-
-  public void rotateIntake(double throttle) {
-    m_driveMotor.set(throttle);
-  }
-
-  public void stop() {
-    m_driveMotor.set(0);
-  }
-
-  public void setReferencePeriodic() {
-    m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+  public void driveArm(double throttle) {
+    throttle = -throttle;
+    rotations += throttle;
+    setReferencePeriodic();
   }
 
   public void setReferenceValue(double rotation) {
     rotations = rotation;
   }
 
-  public void moveIntakeToPosition(double position) {
-    setReferenceValue(position);
-    setReferencePeriodic();
+  public void setReferencePeriodic() {
+    rotations = MathUtil.clamp(rotations, minRotations, maxRotations);
+    m_driveController.setReference(rotations, CANSparkMax.ControlType.kPosition);
   }
+
 }

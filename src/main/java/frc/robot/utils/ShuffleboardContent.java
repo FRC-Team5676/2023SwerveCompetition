@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.utils.Enums.ModulePosition;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.modules.LowerArmModule;
-import frc.robot.subsystems.modules.SwerveModule;
-import frc.robot.subsystems.modules.UpperArmModule;
+import frc.robot.subsystems.LowerArmSubsystem;
+import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.UpperArmSubsystem;
 
 /** Add your docs here. */
 public class ShuffleboardContent {
@@ -125,7 +125,7 @@ public class ShuffleboardContent {
                                 .withSize(1, 1);
         }
 
-        public static void initUpperArm(UpperArmModule drive) {
+        public static void initUpperArm(UpperArmSubsystem drive) {
                 ShuffleboardTab drLayout1 = Shuffleboard.getTab("Arms");
 
                 drLayout1.addNumber("Upper Arm Angle", () -> drive.getPosition())
@@ -142,7 +142,7 @@ public class ShuffleboardContent {
                         .withSize(8, 1);
         }
 
-        public static void initLowerArm(LowerArmModule drive) {
+        public static void initLowerArm(LowerArmSubsystem drive) {
                 ShuffleboardTab drLayout1 = Shuffleboard.getTab("Arms");
 
                 drLayout1.addNumber("Lower Arm Angle", () -> drive.getPosition())

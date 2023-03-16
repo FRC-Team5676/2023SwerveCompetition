@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.modules;
+package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -403,5 +403,11 @@ public class SwerveModule extends SubsystemBase {
     turnCoderConnected = m_turnCANcoder.getFirmwareVersion() > 0;
 
     return driveMotorConnected && turnMotorConnected && turnCoderConnected;
+  }
+
+  // Stop all motors on module 
+  public void stop() {
+    m_driveMotor.set(0);
+    m_turningMotor.set(0);
   }
 }
