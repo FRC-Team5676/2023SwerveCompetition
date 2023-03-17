@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.utils.NeoConversions;
 
 public final class Constants {
     public static final class Controller {
@@ -77,19 +76,15 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-        public static final boolean kFrontLeftTurningMotorReversed = true;
-        public static final boolean kBackLeftTurningMotorReversed = true;
-        public static final boolean kFrontRightTurningMotorReversed = true;
-        public static final boolean kBackRightTurningMotorReversed = true;
+        public static final boolean kFrontLeftTurningMotorReversed = ModuleConstants.kTurnInverted;
+        public static final boolean kBackLeftTurningMotorReversed = ModuleConstants.kTurnInverted;
+        public static final boolean kFrontRightTurningMotorReversed = ModuleConstants.kTurnInverted;
+        public static final boolean kBackRightTurningMotorReversed = ModuleConstants.kTurnInverted;
 
-        public static final boolean kFrontLeftDriveMotorReversed = true;
-        public static final boolean kBackLeftDriveMotorReversed = true;
-        public static final boolean kFrontRightDriveMotorReversed = true;
-        public static final boolean kBackRightDriveMotorReversed = true;
-
-        // These are not the max speeds, rather the allowed max velocity
-        public static final double kMaxAllowedVelMetersPerSec = NeoConversions.maxMechMetersPerSec(ModuleConstants.kWheelCircumferenceMeters, ModuleConstants.kMk4iDriveGearRatio);
-        public static final double kMaxAllowedRotVelRadsPerSec = NeoConversions.maxMechRadsPerSec(ModuleConstants.kMk4iTurnGearRatio);
+        public static final boolean kFrontLeftDriveMotorReversed = ModuleConstants.kDriveInverted;
+        public static final boolean kBackLeftDriveMotorReversed = ModuleConstants.kDriveInverted;
+        public static final boolean kFrontRightDriveMotorReversed = ModuleConstants.kDriveInverted;
+        public static final boolean kBackRightDriveMotorReversed = ModuleConstants.kDriveInverted;
 
         // Distance between centers of right and left wheels on robot
         public static final double kRobotWidth = Units.inchesToMeters(23.25);
@@ -97,11 +92,16 @@ public final class Constants {
         // Distance between front and back wheels on robot
         public static final double kRobotLength = Units.inchesToMeters(19.25);
 
+        // These are not the max speeds, rather the allowed max velocity
+        public static final double kMaxVelocityMetersPerSec = 4.14528;
+        public static final double kMaxAngularVelocityRadiansPerSec = kMaxVelocityMetersPerSec / 
+            Math.hypot(kRobotWidth / 2, kRobotLength / 2);
+
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kRobotLength / 2, kRobotWidth / 2),    // Front Left
-                new Translation2d(kRobotLength / 2, -kRobotWidth / 2),   // Front Right
-                new Translation2d(-kRobotLength / 2, kRobotWidth / 2),   // Back Left
-                new Translation2d(-kRobotLength / 2, -kRobotWidth / 2)); // Back Right
+                new Translation2d(kRobotWidth / 2, kRobotLength / 2),    // Front Left
+                new Translation2d(kRobotWidth / 2, -kRobotLength / 2),   // Front Right
+                new Translation2d(-kRobotWidth / 2, kRobotLength / 2),   // Back Left
+                new Translation2d(-kRobotWidth / 2, -kRobotLength / 2)); // Back Right
 
         // Constant Angular Wheel Offset in Degrees
         public static final double kFrontLeftAngularOffset = 41.3;
@@ -132,16 +132,18 @@ public final class Constants {
 
         public static final double kTranslationSlew = 1.55;
         public static final double kRotationSlew = 3.00;
-        public static final double kVoltCompensation = 12.6;
 
     }
 
     public static final class ModuleConstants {
         public static final boolean kTurningEncoderInverted = true;
 
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(4);           // 0.1016 meters
+        // Values from SDS GitHub repo
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(3.95);        // 0.10033 meters
         public static double kMk4iDriveGearRatio = ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)); // 0.122807 = 1/8.142858
+        public static boolean kDriveInverted = true;
         public static double kMk4iTurnGearRatio = ((14.0 / 50.0) * (10.0 / 60.0));                  // 0.046667 = 1/21.428418
+        public static boolean kTurnInverted = false;
 
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
@@ -150,32 +152,12 @@ public final class Constants {
         public static final double kDriveEncoderRpm2Mps = kDriveEncoderRot2Meter / 60;
         public static final double kTurnEncoderRpm2Rps = kTurnEncoderRot2Rad / 60;
 
-        public static final double kDriveP = 0.01;
-        public static final double kDriveI = 0;
-        public static final double kDriveD = 0;
-        public static final double kDriveIZone = 1;
+        public static final double kTurnP = 1.0; // SDS Config
+        public static final double kTurnI = 0.0; // SDS Config
+        public static final double kTurnD = 0.1; // SDS Config
 
-        public static final double kTurnP = 0.008; // 0.5 in video
-        public static final double kTurnI = 0;
-        public static final double kTurnD = 0;
-
-        public static final int kDriveMotorCurrentLimit = 20; // amps
-        public static final int kTurnMotorCurrentLimit = 20; // amps
+        public static final double kVoltCompensation = 12.0; // SDS Config
+        public static final int kDriveMotorCurrentLimit = 80; // amps SDS Config
+        public static final int kTurnMotorCurrentLimit = 20; // amps SDS Config
     }
-
-    public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPZController = 0.01;
-
-        // Constraint for the motion profiled robot angle controller
-        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-    }
-
 }

@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -15,7 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderFaults;
@@ -42,35 +40,32 @@ public class SwerveModule extends SubsystemBase {
 
   private RelativeEncoder m_driveEncoder;
   private RelativeEncoder m_turnEncoder;
-  private SparkMaxPIDController m_driveController;
-  private PIDController m_turnPidController;
+  private SparkMaxPIDController m_turnPidController;
   private SwerveModuleState m_state;
-  private double m_toleranceDegPerSec = .05;
-  private double m_toleranceDeg = .25;
 
   /**
    * Constructs a SwerveModule.
    *
+   * @param modulePosition
    * @param driveMotorChannel       The channel of the drive motor
-   * @param turningMotorChannel     The channel of the turning motor
-   * @param driveEncoderChannels    The channels of the drive encoder
-   * @param turningCANCoderChannels The channels of the turning encoder
-   * @param driveEncoderReversed    Whether the drive encoder is reversed
-   * @param turningEncoderReversed  Whether the turning encoder is reversed
-   * @param turningEncoderOffset    Offset of abs encoder relative to front
+   * @param turnMotorCanChannel     The channel of the turning motor
+   * @param cancoderCanChannel The channels of the turning encoder
+   * @param driveMotorInverted    Whether the drive encoder is reversed
+   * @param turnMotorInverted  Whether the turning encoder is reversed
+   * @param turnEncoderOffset    Offset of abs encoder relative to front
    */
   public SwerveModule(
       ModulePosition modulePosition,
       int driveMotorCanChannel,
-      int turningMotorCanChannel,
+      int turnMotorCanChannel,
       int cancoderCanChannel,
-      boolean driveMotorReversed,
-      boolean turningMotorReversed,
-      double turningEncoderOffset) {
+      boolean driveMotorInverted,
+      boolean turnMotorInverted,
+      double turnEncoderOffset) {
 
-    configDriveMotor(driveMotorCanChannel, driveMotorReversed);
-    configTurnMotor(turningMotorCanChannel, turningMotorReversed);
-    configCanCoder(cancoderCanChannel, turningEncoderOffset);
+    configDriveMotor(driveMotorCanChannel, driveMotorInverted);
+    configCanCoder(cancoderCanChannel, turnEncoderOffset);
+    configTurnMotor(turnMotorCanChannel, turnMotorInverted);
 
     m_modulePosition = modulePosition;
     m_moduleNumber = m_modulePosition.ordinal();// gets module enum index
@@ -107,7 +102,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     m_state = AngleUtils.optimize(desiredState, getState().angle);
-    m_driveMotor.set(m_state.speedMetersPerSecond / DriveConstants.kMaxAllowedVelMetersPerSec);
+    m_driveMotor.set(m_state.speedMetersPerSecond / DriveConstants.kMaxVelocityMetersPerSec);
     m_turnMotor.set(m_turnPidController.calculate(getTurnPosition(), m_state.angle.getDegrees()));
 
     m_actualAngleDegrees = getTurnPosition();
@@ -152,8 +147,8 @@ public class SwerveModule extends SubsystemBase {
   }
 
   private void resetAngleToAbsolute() {
-    double angle = m_turnCANcoder.getAbsolutePosition() - m_turningEncoderOffset;
-    m_turnEncoder.setPosition(angle);
+    double angle = m_turnCANcoder.getAbsolutePosition() - m_turningEncoderOffset; // degrees
+    m_turnEncoder.setPosition(angle / 360); // <== convert deg to rotations 360 deg per 1 rotation
   }
 
   private boolean checkCAN() {
@@ -164,13 +159,13 @@ public class SwerveModule extends SubsystemBase {
     return m_driveMotorConnected && m_turnMotorConnected && m_turnCoderConnected;
   }
 
-  private void configDriveMotor(int driveMotorCanChannel, boolean driveMotorReversed) {
+  private void configDriveMotor(int driveMotorCanChannel, boolean driveMotorInverted) {
     // Motor setup
     m_driveMotor = new CANSparkMax(driveMotorCanChannel, MotorType.kBrushless);
     m_driveMotor.restoreFactoryDefaults();
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
-    m_driveMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
-    m_driveMotor.setInverted(driveMotorReversed);
+    m_driveMotor.enableVoltageCompensation(ModuleConstants.kVoltCompensation);
+    m_driveMotor.setInverted(driveMotorInverted);
     m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
     m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
     m_driveMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
@@ -180,25 +175,18 @@ public class SwerveModule extends SubsystemBase {
     m_driveEncoder = m_driveMotor.getEncoder();
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRpm2Mps);
-
-    // Controller setup
-    m_driveController = m_driveMotor.getPIDController();
-    m_driveController.setP(ModuleConstants.kDriveP);
-    m_driveController.setI(ModuleConstants.kDriveI);
-    m_driveController.setD(ModuleConstants.kDriveD);
-    m_driveController.setIZone(ModuleConstants.kDriveIZone);
   }
 
-  private void configTurnMotor(int turningMotorCanChannel, boolean turningMotorReversed) {
+  private void configTurnMotor(int turnMotorCanChannel, boolean turnMotorInverted) {
     // turning motor setup
-    m_turnMotor = new CANSparkMax(turningMotorCanChannel, MotorType.kBrushless);
+    m_turnMotor = new CANSparkMax(turnMotorCanChannel, MotorType.kBrushless);
     m_turnMotor.restoreFactoryDefaults();
     m_turnMotor.setSmartCurrentLimit(ModuleConstants.kTurnMotorCurrentLimit);
-    m_turnMotor.enableVoltageCompensation(DriveConstants.kVoltCompensation);
-    m_turnMotor.setInverted(turningMotorReversed);
-    m_turnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 10);
+    m_turnMotor.enableVoltageCompensation(ModuleConstants.kVoltCompensation);
+    m_turnMotor.setInverted(turnMotorInverted);
+    m_turnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
     m_turnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-    m_turnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 50);
+    m_turnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
     m_turnMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
     // turning encoder setup
@@ -207,16 +195,16 @@ public class SwerveModule extends SubsystemBase {
     m_turnEncoder.setPositionConversionFactor(ModuleConstants.kTurnEncoderRot2Rad);
     m_turnEncoder.setVelocityConversionFactor(ModuleConstants.kTurnEncoderRpm2Rps);
 
-    m_turnPidController = new PIDController(ModuleConstants.kTurnP,
-        ModuleConstants.kTurnI,
-        ModuleConstants.kTurnD);
-    m_turnPidController.enableContinuousInput(-Math.PI, Math.PI);
+    m_turnPidController = m_driveMotor.getPIDController();
+    m_turnPidController.setP(ModuleConstants.kTurnP);
+    m_turnPidController.setI(ModuleConstants.kTurnI);
+    m_turnPidController.setD(ModuleConstants.kTurnD);
   }
 
-  private void configCanCoder(int cancoderCanChannel, double turningEncoderOffset) {
+  private void configCanCoder(int cancoderCanChannel, double turnEncoderOffset) {
     m_turnCANcoder = new CANCoder(cancoderCanChannel);
     m_turnCANcoder.configFactoryDefault();
     m_turnCANcoder.configAllSettings(AngleUtils.generateCanCoderConfig());
-    m_turningEncoderOffset = turningEncoderOffset;
+    m_turningEncoderOffset = turnEncoderOffset;
   }
 }
