@@ -7,8 +7,8 @@ import frc.robot.Constants.CustomConstants;
 public class joystick {
 
     private final Joystick controller;
-    public final JoystickButton button7;
-    public final JoystickButton button8;
+    public final JoystickButton button1;
+    public final JoystickButton button2;
     private final double kDeadzoneStick = CustomConstants.stickDeadband;
 
     /**
@@ -16,8 +16,8 @@ public class joystick {
      */
     public joystick(int port) {
         controller = new Joystick(port);
-        button7 = createButton(7);
-        button8 = createButton(8);
+        button1 = createButton(1);
+        button2 = createButton(2);
     }
 
     /** The X (left/right) position of the right joystick on the controller from -1.0 to 1.0 */

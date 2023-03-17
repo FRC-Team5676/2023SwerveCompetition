@@ -78,8 +78,8 @@ public class RobotContainer {
     operator.buttonB.onTrue(new InstantCommand(lowerArm::moveToFarPosition));
     operator.buttonX.onTrue(new InstantCommand(lowerArm::moveToBackPosition));
 
-    driver.button7.onTrue(new InstantCommand(swerve::toggleFieldRelative));
-    driver.button8.onTrue(new InstantCommand(swerve::zeroGyro));
+    driver.button1.onTrue(new InstantCommand(swerve::toggleFieldRelative));
+    driver.button2.onTrue(new InstantCommand(swerve::zeroGyro));
 
     lowerArm.setDefaultCommand(new MoveLowerArmCommand(lowerArm, operator));
     upperArm.setDefaultCommand(new MoveUpperArmCommand(upperArm, operator));
