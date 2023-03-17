@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -104,10 +103,10 @@ public final class Constants {
                 new Translation2d(-kRobotWidth / 2, -kRobotLength / 2)); // Back Right
 
         // Constant Angular Wheel Offset in Degrees
-        public static final double kFrontLeftAngularOffset = 41.3;
-        public static final double kFrontRightAngularOffset = 113.2;
-        public static final double kBackLeftAngularOffset = 125.59;
-        public static final double kBackRightAngularOffset = 255.14;
+        public static final double kFrontLeftAngularOffsetRadians = Math.toRadians(41.3);
+        public static final double kFrontRightAngularOffsetRadians = Math.toRadians(113.2);
+        public static final double kBackLeftAngularOffsetRadians = Math.toRadians(125.59);
+        public static final double kBackRightAngularOffsetRadians = Math.toRadians(255.14);
 
         // Spark MAX Drive Motor CAN IDs
         public static final int kFrontLeftDriveMotorCanId = 23;
@@ -156,8 +155,15 @@ public final class Constants {
         public static final double kTurnI = 0.0; // SDS Config
         public static final double kTurnD = 0.1; // SDS Config
 
-        public static final double kVoltCompensation = 12.0; // SDS Config
+        public static final double kMaxVoltage = 12.0;        // SDS Config
+        public static final double kVoltCompensation = 12.0;  // SDS Config
         public static final int kDriveMotorCurrentLimit = 80; // amps SDS Config
-        public static final int kTurnMotorCurrentLimit = 20; // amps SDS Config
+        public static final int kTurnMotorCurrentLimit = 20;  // amps SDS Config
+    }
+
+    public static final class AutoConstants {
+        public static final double kPXController = 1;
+        public static final double kPYController = 1;
+        public static final double kPZController = 0.01;
     }
 }

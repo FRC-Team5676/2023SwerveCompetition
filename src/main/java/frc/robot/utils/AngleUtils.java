@@ -19,44 +19,43 @@ public final class AngleUtils {
     return sensorConfig;
   }
 
-  public static SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
-    double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
+  public static SwerveModuleState optimizeTurn(SwerveModuleState desiredState, Rotation2d currentAngle) {
     double targetSpeed = desiredState.speedMetersPerSecond;
-    double delta = targetAngle - currentAngle.getDegrees();
-    if (Math.abs(delta) > 90) {
-      targetSpeed = -targetSpeed;
-      targetAngle = delta > 90 ? (targetAngle -= 180) : (targetAngle += 180);
-    }
-    return new SwerveModuleState(targetSpeed, Rotation2d.fromDegrees(targetAngle));
-  }
 
-  /**
-   * @param scopeReference Current Angle
-   * @param newAngle       Target Angle
-   * @return Closest angle within scope
-   */
-  private static double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
-    double lowerBound;
-    double upperBound;
-    double lowerOffset = scopeReference % 360;
-    if (lowerOffset >= 0) {
-      lowerBound = scopeReference - lowerOffset;
-      upperBound = scopeReference + (360 - lowerOffset);
-    } else {
-      upperBound = scopeReference - lowerOffset;
-      lowerBound = scopeReference - (360 + lowerOffset);
+    double newAngleRadians = desiredState.angle.getRadians();
+    double currentAngleRadians = currentAngle.getRadians();
+
+    newAngleRadians %= (2.0 * Math.PI);
+    if (newAngleRadians < 0.0) {
+      newAngleRadians += 2.0 * Math.PI;
     }
-    while (newAngle < lowerBound) {
-      newAngle += 360;
+
+    double deltaRadians = newAngleRadians - currentAngleRadians;
+    // Change the target angle so the difference is in the range [-pi, pi) instead
+    // of [0, 2pi)
+    if (deltaRadians >= Math.PI) {
+      newAngleRadians -= 2.0 * Math.PI;
+    } else if (deltaRadians < -Math.PI) {
+      newAngleRadians += 2.0 * Math.PI;
     }
-    while (newAngle > upperBound) {
-      newAngle -= 360;
+    deltaRadians = newAngleRadians - currentAngleRadians; // Recalculate difference
+
+    // If the difference is greater than 90 deg or less than -90 deg the drive can
+    // be inverted so the total
+    // movement of the module is less than 90 deg
+    if (deltaRadians > Math.PI / 2.0 || deltaRadians < -Math.PI / 2.0) {
+      // Only need to add 180 deg here because the target angle will be put back into
+      // the range [0, 2pi)
+      newAngleRadians += Math.PI;
+      targetSpeed *= -1.0;
     }
-    if (newAngle - scopeReference > 180) {
-      newAngle -= 360;
-    } else if (newAngle - scopeReference < -180) {
-      newAngle += 360;
+
+    // Put the target angle back into the range [0, 2pi)
+    newAngleRadians %= (2.0 * Math.PI);
+    if (newAngleRadians < 0.0) {
+      newAngleRadians += 2.0 * Math.PI;
     }
-    return newAngle;
+
+    return new SwerveModuleState(targetSpeed, Rotation2d.fromRadians(newAngleRadians));
   }
 }

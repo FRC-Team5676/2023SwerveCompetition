@@ -30,7 +30,7 @@ public class ShuffleboardContent {
 
         public static void initBooleanShuffleboard(SwerveModule m_sm) {
 
-                ModulePosition m_modulePosition = m_sm.getModulePosition();
+                ModulePosition m_modulePosition = m_sm.m_modulePosition;
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.m_modAbrev[m_moduleNumber];
 
@@ -44,7 +44,7 @@ public class ShuffleboardContent {
         }
 
         public static void initDriveShuffleboard(SwerveModule m_sm) {
-                ModulePosition m_modulePosition = m_sm.getModulePosition();
+                ModulePosition m_modulePosition = m_sm.m_modulePosition;
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 String driveLayout = m_modulePosition.toString() + " Drive";
@@ -53,15 +53,15 @@ public class ShuffleboardContent {
                                 .getLayout(driveLayout, BuiltInLayouts.kList).withPosition(m_moduleNumber * 2, 0)
                                 .withSize(2, 2).withProperties(Map.of("Label position", "LEFT"));
 
-                drLayout.addNumber("Drive Speed MPS " + abrev, () -> m_sm.getDriveVelocity());
-                drLayout.addNumber("Drive Position " + abrev, () -> m_sm.getDrivePosition());
+                drLayout.addNumber("Drive Speed MPS " + abrev, () -> m_sm.getDriveVelocityMps());
+                drLayout.addNumber("Drive Position " + abrev, () -> m_sm.getDrivePositionMeters());
                 drLayout.addNumber("App Output " + abrev, () -> m_sm.m_driveMotor.getAppliedOutput());
-                drLayout.addNumber("Current Amps " + abrev, () -> m_sm.getDriveCurrent());
+                drLayout.addNumber("Current Amps " + abrev, () -> m_sm.getDriveCurrentAmps());
                 drLayout.addNumber("Firmware" + abrev, () -> m_sm.m_driveMotor.getFirmwareVersion());
         }
 
         public static void initTurnShuffleboard(SwerveModule m_sm) {
-                ModulePosition m_modulePosition = m_sm.getModulePosition();
+                ModulePosition m_modulePosition = m_sm.m_modulePosition;
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 String turnLayout = m_modulePosition.toString() + " Turn";
@@ -70,20 +70,20 @@ public class ShuffleboardContent {
                                 .getLayout(turnLayout, BuiltInLayouts.kList).withPosition(m_moduleNumber * 2, 2)
                                 .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
-                tuLayout.addNumber("Turn Setpoint Deg " + abrev, () -> m_sm.m_desiredAngle);
-                tuLayout.addNumber("Turn Enc Pos " + abrev, () -> m_sm.getTurnPosition() % 360);
-                tuLayout.addNumber("Turn Velocity " + abrev, () -> m_sm.getTurnVelocity());
-                tuLayout.addNumber("Act Ang Deg " + abrev, () -> m_sm.m_actualAngleDegrees);
+                tuLayout.addNumber("Turn Setpoint Deg " + abrev, () -> m_sm.m_desiredAngleRadians);
+                tuLayout.addNumber("Turn Enc Pos " + abrev, () -> m_sm.getTurnPositionRadians() % 360);
+                tuLayout.addNumber("Turn Velocity " + abrev, () -> m_sm.getTurnVelocityRps());
+                tuLayout.addNumber("Act Ang Deg " + abrev, () -> m_sm.m_actualAngleRadians);
                 tuLayout.addNumber("TurnAngleOut" + abrev, () -> m_sm.m_turnMotor.getAppliedOutput());
                 tuLayout.addNumber("Position" + abrev, () -> m_sm.m_turnCANcoder.getPosition());
-                tuLayout.addNumber("Current Amps" + abrev, () -> m_sm.getTurnCurrent());
-                tuLayout.addNumber("Abs Offset" + abrev, () -> m_sm.m_turningEncoderOffset);
+                tuLayout.addNumber("Current Amps" + abrev, () -> m_sm.getTurnCurrentAmps());
+                tuLayout.addNumber("Abs Offset" + abrev, () -> m_sm.m_turnEncoderOffsetRadians);
                 tuLayout.addNumber("Firmware" + abrev, () -> m_sm.m_turnMotor.getFirmwareVersion());
         }
 
         public static void initCoderBooleanShuffleboard(SwerveModule m_sm) {
 
-                ModulePosition m_modulePosition = m_sm.getModulePosition();
+                ModulePosition m_modulePosition = m_sm.m_modulePosition;
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 ShuffleboardTab x = Shuffleboard.getTab("CanCoders");
@@ -99,7 +99,7 @@ public class ShuffleboardContent {
         }
 
         public static void initCANCoderShuffleboard(SwerveModule m_sm) {
-                ModulePosition m_modulePosition = m_sm.getModulePosition();
+                ModulePosition m_modulePosition = m_sm.m_modulePosition;
                 int m_moduleNumber = m_modulePosition.ordinal();
                 String abrev = m_sm.m_modAbrev[m_moduleNumber];
                 String canCoderLayout = m_modulePosition.toString() + " CanCoder";
@@ -109,7 +109,7 @@ public class ShuffleboardContent {
                                 .withSize(2, 3).withProperties(Map.of("Label position", "LEFT"));
 
                 coderLayout.addNumber("Abs Position" + abrev, () -> m_sm.m_turnCANcoder.getAbsolutePosition());
-                coderLayout.addNumber("Abs Offset" + abrev, () -> m_sm.m_turningEncoderOffset);
+                coderLayout.addNumber("Abs Offset" + abrev, () -> m_sm.m_turnEncoderOffsetRadians);
                 coderLayout.addNumber("Position" + abrev, () -> m_sm.m_turnCANcoder.getPosition());
                 coderLayout.addNumber("Velocity" + abrev, () -> m_sm.m_turnCANcoder.getVelocity());
                 coderLayout.addString("MagField" + abrev, () -> m_sm.m_turnCANcoder.getMagnetFieldStrength().toString());

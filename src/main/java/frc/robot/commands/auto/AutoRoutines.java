@@ -32,8 +32,8 @@ public class AutoRoutines {
                                                 new StartEndCommand(() -> intake.moveIntakeToPosition(10),
                                                                 () -> intake.rotateIntake(0), intake)
                                                                 .withTimeout(2)),
-                                new StartEndCommand(() -> robot.drive(0.3, 0, 0, true),
-                                                () -> robot.drive(0, 0, 0, true), robot)
+                                new StartEndCommand(() -> robot.drive(0.3, 0, 0),
+                                                () -> robot.drive(0, 0, 0), robot)
                                                 .withTimeout(2),
                                 new StartEndCommand(() -> upperArm.moveToPosition(0), () -> upperArm.driveArm(0),
                                                 upperArm)

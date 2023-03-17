@@ -50,7 +50,7 @@ public class TeleopSwerveCommand extends CommandBase {
         double strafe_sl = m_slewY.calculate(strafe);
         double rotation_sl = m_slewRot.calculate(rotation);
 
-        m_swerveDrive.drive(throttle_sl, strafe_sl, rotation_sl, true);
+        m_swerveDrive.drive(throttle_sl, strafe_sl, rotation_sl);
     }
 
     // Called once the command ends or is interrupted.

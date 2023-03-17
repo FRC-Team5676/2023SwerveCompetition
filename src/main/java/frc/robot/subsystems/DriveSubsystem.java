@@ -27,7 +27,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kFrontLeftTurnEncoderCanId,
             DriveConstants.kFrontLeftDriveMotorReversed,
             DriveConstants.kFrontLeftTurningMotorReversed,
-            DriveConstants.kFrontLeftAngularOffset);
+            DriveConstants.kFrontLeftAngularOffsetRadians);
 
     private final SwerveModule m_frontRight = new SwerveModule(
             ModulePosition.FRONT_RIGHT,
@@ -36,7 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kFrontRightTurnEncoderCanId,
             DriveConstants.kFrontRightDriveMotorReversed,
             DriveConstants.kFrontRightTurningMotorReversed,
-            DriveConstants.kFrontRightAngularOffset);
+            DriveConstants.kFrontRightAngularOffsetRadians);
 
     private final SwerveModule m_backLeft = new SwerveModule(
             ModulePosition.BACK_LEFT,
@@ -45,7 +45,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kBackLeftTurnEncoderCanId,
             DriveConstants.kBackLeftDriveMotorReversed,
             DriveConstants.kBackLeftTurningMotorReversed,
-            DriveConstants.kBackLeftAngularOffset);
+            DriveConstants.kBackLeftAngularOffsetRadians);
 
     private final SwerveModule m_backRight = new SwerveModule(
             ModulePosition.BACK_RIGHT,
@@ -54,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightTurnEncoderCanId,
             DriveConstants.kBackRightDriveMotorReversed,
             DriveConstants.kBackRightTurningMotorReversed,
-            DriveConstants.kBackRightAngularOffset);
+            DriveConstants.kBackRightAngularOffsetRadians);
 
     // The gyro sensor
     private final AHRS m_gyro;
@@ -160,7 +160,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param kfieldRelative Whether the provided x and y speeds are relative to the
      *                      field.
      */
-    public void drive(double throttle, double strafe, double rotation, boolean isOpenLoop) {
+    public void drive(double throttle, double strafe, double rotation) {
 
         throttle *= DriveConstants.kMaxVelocityMetersPerSec;
         strafe *= DriveConstants.kMaxVelocityMetersPerSec;
@@ -174,19 +174,18 @@ public class DriveSubsystem extends SubsystemBase {
                                 throttle, strafe, rotation, Rotation2d.fromDegrees(m_gyro.getYaw()))
                         : new ChassisSpeeds(throttle, strafe, rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxVelocityMetersPerSec);
-        m_frontLeft.setDesiredState(swerveModuleStates[0], isOpenLoop);
-        m_frontRight.setDesiredState(swerveModuleStates[1], isOpenLoop);
-        m_backLeft.setDesiredState(swerveModuleStates[2], isOpenLoop);
-        m_backRight.setDesiredState(swerveModuleStates[3], isOpenLoop);
+        m_frontLeft.setDesiredState(swerveModuleStates[0]);
+        m_frontRight.setDesiredState(swerveModuleStates[1]);
+        m_backLeft.setDesiredState(swerveModuleStates[2]);
+        m_backRight.setDesiredState(swerveModuleStates[3]);
     }
 
     /** Sets the wheels into an X formation to prevent movement. */
     public void setX() {
-        boolean isOpenLoop = true;
-        m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), isOpenLoop);
-        m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), isOpenLoop);
-        m_backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), isOpenLoop);
-        m_backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), isOpenLoop);
+        m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        m_backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        m_backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     }
 
     /**
@@ -194,16 +193,12 @@ public class DriveSubsystem extends SubsystemBase {
      *
      * @param desiredStates The desired SwerveModule states.
      */
-    public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxVelocityMetersPerSec);
-        m_frontLeft.setDesiredState(desiredStates[0], isOpenLoop);
-        m_frontRight.setDesiredState(desiredStates[1], isOpenLoop);
-        m_backLeft.setDesiredState(desiredStates[2], isOpenLoop);
-        m_backRight.setDesiredState(desiredStates[3], isOpenLoop);
-    }
-
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        setModuleStates(desiredStates, true);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxVelocityMetersPerSec);
+        m_frontLeft.setDesiredState(desiredStates[0]);
+        m_frontRight.setDesiredState(desiredStates[1]);
+        m_backLeft.setDesiredState(desiredStates[2]);
+        m_backRight.setDesiredState(desiredStates[3]);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */

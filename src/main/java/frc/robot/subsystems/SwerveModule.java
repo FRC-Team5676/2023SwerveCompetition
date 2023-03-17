@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -31,9 +30,9 @@ public class SwerveModule extends SubsystemBase {
   public ModulePosition m_modulePosition;
   public int m_moduleNumber;
   public String[] m_modAbrev = { "_FL", "_FR", "_RL", "_RR" };
-  public double m_desiredAngle;
-  public double m_actualAngleDegrees;
-  public double m_turningEncoderOffset;
+  public double m_desiredAngleRadians;
+  public double m_actualAngleRadians;
+  public double m_turnEncoderOffsetRadians;
   public boolean m_driveMotorConnected;
   public boolean m_turnMotorConnected;
   public boolean m_turnCoderConnected;
@@ -46,13 +45,13 @@ public class SwerveModule extends SubsystemBase {
   /**
    * Constructs a SwerveModule.
    *
-   * @param modulePosition
-   * @param driveMotorChannel       The channel of the drive motor
-   * @param turnMotorCanChannel     The channel of the turning motor
-   * @param cancoderCanChannel The channels of the turning encoder
-   * @param driveMotorInverted    Whether the drive encoder is reversed
-   * @param turnMotorInverted  Whether the turning encoder is reversed
-   * @param turnEncoderOffset    Offset of abs encoder relative to front
+   * @param modulePosition            Module position enum
+   * @param driveMotorChannel         The channel of the drive motor
+   * @param turnMotorCanChannel       The channel of the turning motor
+   * @param cancoderCanChannel        The channels of the turning encoder
+   * @param driveMotorInverted        Whether the drive motor is inverted
+   * @param turnMotorInverted         Whether the turn motor is inverted
+   * @param turnEncoderOffsetRadians  Offset of abs encoder relative to front in Radians
    */
   public SwerveModule(
       ModulePosition modulePosition,
@@ -61,14 +60,14 @@ public class SwerveModule extends SubsystemBase {
       int cancoderCanChannel,
       boolean driveMotorInverted,
       boolean turnMotorInverted,
-      double turnEncoderOffset) {
+      double turnEncoderOffsetRadians) {
 
     configDriveMotor(driveMotorCanChannel, driveMotorInverted);
-    configCanCoder(cancoderCanChannel, turnEncoderOffset);
     configTurnMotor(turnMotorCanChannel, turnMotorInverted);
+    configCanCoder(cancoderCanChannel, turnEncoderOffsetRadians);
 
     m_modulePosition = modulePosition;
-    m_moduleNumber = m_modulePosition.ordinal();// gets module enum index
+    m_moduleNumber = m_modulePosition.ordinal(); // gets module enum index
 
     checkCAN();
     resetAngleToAbsolute();
@@ -87,25 +86,21 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public SwerveModulePosition getPosition() {
-    double position = getTurnPosition() - m_turningEncoderOffset;
-    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(position));
+    double position = getTurnPositionRadians() - m_turnEncoderOffsetRadians;
+    return new SwerveModulePosition(getDrivePositionMeters(), new Rotation2d(position));
   }
 
-  public ModulePosition getModulePosition() {
-    return m_modulePosition;
-  }
-
-  public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+  public void setDesiredState(SwerveModuleState desiredState) {
     if (Math.abs(m_state.speedMetersPerSecond) < 0.001) {
       stop();
       return;
     }
 
-    m_state = AngleUtils.optimize(desiredState, getState().angle);
-    m_driveMotor.set(m_state.speedMetersPerSecond / DriveConstants.kMaxVelocityMetersPerSec);
-    m_turnMotor.set(m_turnPidController.calculate(getTurnPosition(), m_state.angle.getDegrees()));
+    m_state = AngleUtils.optimizeTurn(desiredState, getState().angle);
+    m_desiredAngleRadians = m_state.angle.getRadians();
+    setTurnReferenceAngleRadians(m_desiredAngleRadians);
 
-    m_actualAngleDegrees = getTurnPosition();
+    setDriveReferenceVoltage(m_state.speedMetersPerSecond / DriveConstants.kMaxVelocityMetersPerSec * ModuleConstants.kMaxVoltage);
   }
 
   public void resetEncoders() {
@@ -113,27 +108,33 @@ public class SwerveModule extends SubsystemBase {
     m_turnEncoder.setPosition(0);
   }
 
-  public double getDrivePosition() {
+  public double getDrivePositionMeters() {
     return m_driveEncoder.getPosition();
   }
 
-  public double getDriveVelocity() {
+  public double getDriveVelocityMps() {
     return m_driveEncoder.getVelocity();
   }
 
-  public double getDriveCurrent() {
+  public double getDriveCurrentAmps() {
     return m_driveMotor.getOutputCurrent();
   }
 
-  public double getTurnPosition() {
-    return m_turnEncoder.getPosition();
+  public double getTurnPositionRadians() {
+    double motorAngleRadians = m_turnEncoder.getPosition();
+    motorAngleRadians %= 2.0 * Math.PI;
+    if (motorAngleRadians < 0.0) {
+        motorAngleRadians += 2.0 * Math.PI;
+    }
+
+    return motorAngleRadians;
   }
 
-  public double getTurnVelocity() {
+  public double getTurnVelocityRps() {
     return m_turnEncoder.getVelocity();
   }
 
-  public double getTurnCurrent() {
+  public double getTurnCurrentAmps() {
     return m_turnMotor.getOutputCurrent();
   }
 
@@ -142,13 +143,38 @@ public class SwerveModule extends SubsystemBase {
     m_turnMotor.set(0);
   }
 
+  private void setDriveReferenceVoltage (double driveVoltage) {
+    m_driveMotor.setVoltage(driveVoltage);
+  }
+
+  private void setTurnReferenceAngleRadians(double referenceAngleRadians) {
+    double currentAngleRadians = m_turnEncoder.getPosition();
+
+    double currentAngleRadiansMod = currentAngleRadians % (2.0 * Math.PI);
+    if (currentAngleRadiansMod < 0.0) {
+        currentAngleRadiansMod += 2.0 * Math.PI;
+    }
+
+    // The reference angle has the range [0, 2pi) but the Neo's encoder can go above that
+    double adjustedReferenceAngleRadians = referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod;
+    if (referenceAngleRadians - currentAngleRadiansMod > Math.PI) {
+        adjustedReferenceAngleRadians -= 2.0 * Math.PI;
+    } else if (referenceAngleRadians - currentAngleRadiansMod < -Math.PI) {
+        adjustedReferenceAngleRadians += 2.0 * Math.PI;
+    }
+
+    m_actualAngleRadians = referenceAngleRadians;
+
+    m_turnPidController.setReference(adjustedReferenceAngleRadians, CANSparkMax.ControlType.kPosition);
+  }
+
   private SwerveModuleState getState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurnPosition()));
+    return new SwerveModuleState(getDriveVelocityMps(), new Rotation2d(getTurnPositionRadians()));
   }
 
   private void resetAngleToAbsolute() {
-    double angle = m_turnCANcoder.getAbsolutePosition() - m_turningEncoderOffset; // degrees
-    m_turnEncoder.setPosition(angle / 360); // <== convert deg to rotations 360 deg per 1 rotation
+    double angleRadians = Math.toRadians(m_turnCANcoder.getAbsolutePosition()) - m_turnEncoderOffsetRadians;
+    m_turnEncoder.setPosition(angleRadians);
   }
 
   private boolean checkCAN() {
@@ -201,10 +227,10 @@ public class SwerveModule extends SubsystemBase {
     m_turnPidController.setD(ModuleConstants.kTurnD);
   }
 
-  private void configCanCoder(int cancoderCanChannel, double turnEncoderOffset) {
+  private void configCanCoder(int cancoderCanChannel, double turnEncoderOffsetRadians) {
     m_turnCANcoder = new CANCoder(cancoderCanChannel);
     m_turnCANcoder.configFactoryDefault();
     m_turnCANcoder.configAllSettings(AngleUtils.generateCanCoderConfig());
-    m_turningEncoderOffset = turnEncoderOffset;
+    m_turnEncoderOffsetRadians = turnEncoderOffsetRadians;
   }
 }
