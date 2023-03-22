@@ -14,14 +14,14 @@ public class UpperArmSubsystem extends SubsystemBase {
   public double rotations;
 
   private final int m_upperArmCanId = 40;
-  private final boolean m_upperArmMotorReversed = true;
+  private final boolean m_upperArmMotorReversed = false;
 
   private final RelativeEncoder m_driveEncoder;
   private final CANSparkMax m_driveMotor;
   private final SparkMaxPIDController m_driveController;
 
-  private final double minRotations = -2;
-  private final double maxRotations = 36;
+  private final double minRotations = 0;
+  private final double maxRotations = 40;
 
   public UpperArmSubsystem() {
     m_driveMotor = new CANSparkMax(m_upperArmCanId, MotorType.kBrushless);
@@ -32,11 +32,9 @@ public class UpperArmSubsystem extends SubsystemBase {
     m_driveEncoder = m_driveMotor.getEncoder();
 
     m_driveController = m_driveMotor.getPIDController();
-    m_driveController.setP(0.01);
+    m_driveController.setP(.1);
     m_driveController.setI(0);
     m_driveController.setD(0);
-    m_driveController.setIZone(0);
-    m_driveController.setFF(0);
     m_driveController.setOutputRange(-1, 1);
 
     ShuffleboardContent.initUpperArm(this);

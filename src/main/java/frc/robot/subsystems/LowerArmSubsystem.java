@@ -37,8 +37,6 @@ public class LowerArmSubsystem extends SubsystemBase {
     m_driveController.setP(0.01);
     m_driveController.setI(0);
     m_driveController.setD(0);
-    m_driveController.setIZone(0);
-    m_driveController.setFF(0);
     m_driveController.setOutputRange(-1, 1);
 
     ShuffleboardContent.initLowerArm(this);
