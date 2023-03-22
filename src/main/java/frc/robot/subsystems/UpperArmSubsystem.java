@@ -32,7 +32,7 @@ public class UpperArmSubsystem extends SubsystemBase {
     m_driveEncoder = m_driveMotor.getEncoder();
 
     m_driveController = m_driveMotor.getPIDController();
-    m_driveController.setP(.1);
+    m_driveController.setP(0.02);
     m_driveController.setI(0);
     m_driveController.setD(0);
     m_driveController.setOutputRange(-1, 1);

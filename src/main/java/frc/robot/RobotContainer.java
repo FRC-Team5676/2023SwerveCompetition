@@ -12,7 +12,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.arms.MoveLowerArmCommand;
 import frc.robot.commands.arms.RotateIntakeCommand;
 import frc.robot.commands.auto.AutoRoutines;
-import frc.robot.commands.auto.AutonomousPath1;
 import frc.robot.commands.swerve.TeleopSwerveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -55,10 +54,9 @@ public class RobotContainer {
   }
 
   private void addAutonomousChoices() {
-    autonManager.addDefaultOption("Swerve Path 1", 
-        new AutonomousPath1(swerve, xController, yController, zController));
-    autonManager.addOption("Set Cone and Leave",
-        AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm, swerve));
+    autonManager.addDefaultOption("Set Cone and Leave",
+        AutoRoutines.PlaceConeAndLeave(lowerArm, upperArm, intakeArm,
+            swerve, xController, yController, zController));
   }
 
   private void configureButtonBindings() {
@@ -69,15 +67,15 @@ public class RobotContainer {
             () -> driver.getStickX(),
             () -> driver.getStickZ()));
 
-    //operator.buttonY.toggleOnTrue(Commands.startEnd(upperArm::moveToMaxPosition, 
-    //                                                upperArm::moveToBottomPosition, 
-    //                                                upperArm));
+    // operator.buttonY.toggleOnTrue(Commands.startEnd(upperArm::moveToMaxPosition,
+    // upperArm::moveToBottomPosition,
+    // upperArm));
     operator.buttonY.onTrue(new InstantCommand(upperArm::moveToMaxPosition));
     operator.buttonA.onTrue(new InstantCommand(upperArm::moveToBottomPosition));
 
-    //operator.buttonB.toggleOnTrue(Commands.startEnd(lowerArm::moveToFarPosition,
-    //                                                 lowerArm::moveToBackPosition,
-    //                                                 lowerArm));
+    // operator.buttonB.toggleOnTrue(Commands.startEnd(lowerArm::moveToFarPosition,
+    // lowerArm::moveToBackPosition,
+    // lowerArm));
     operator.buttonB.onTrue(new InstantCommand(lowerArm::moveToFarPosition));
     operator.buttonX.onTrue(new InstantCommand(lowerArm::moveToBackPosition));
 

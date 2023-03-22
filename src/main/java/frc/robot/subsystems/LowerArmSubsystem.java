@@ -21,7 +21,7 @@ public class LowerArmSubsystem extends SubsystemBase {
   private final SparkMaxPIDController m_driveController;
 
   private final double minRotations = -20;
-  private final double maxRotations = 87;
+  private final double maxRotations = 90;
 
   public LowerArmSubsystem() {
     // Drive Motor setup
@@ -52,7 +52,7 @@ public class LowerArmSubsystem extends SubsystemBase {
   }
 
   public void moveToFarPosition() {
-    setReferenceValue(87);
+    setReferenceValue(maxRotations);
     setReferencePeriodic();
   }
 
